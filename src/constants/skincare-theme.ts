@@ -14,17 +14,14 @@ export const SkincareColors = {
   saleRedSubtle: '#FFF1F1',
   ratingGold: '#F5A623',
 
-  // Product thumbnail pastel tints - clean and airy
   pastelLavender: '#EFEBF8',
   pastelMint: '#E9F3ED',
   pastelPeach: '#FAEDE4',
   pastelBlue: '#E8F0F8',
 
-  // Banner gradient
   bannerStart: '#EFE7F8',
   bannerEnd: '#E4DAF5',
 
-  // Review & badge
   avatarBorder: '#FFFFFF',
   badgeDark: '#1A1428',
   badgeDarkText: '#FFFFFF',

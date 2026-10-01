@@ -59,7 +59,6 @@ export const CartModal: React.FC = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Cart List */}
           {cart.length === 0 ? (
             <View style={styles.emptyContainer}>
               <View style={styles.emptyIconBg}>
@@ -122,7 +121,6 @@ export const CartModal: React.FC = () => {
             </ScrollView>
           )}
 
-          {/* Footer with Checkout */}
           {cart.length > 0 && (
             <View style={styles.footer}>
               <View style={styles.totalRow}>

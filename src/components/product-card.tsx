@@ -23,7 +23,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       style={styles.card}
       onPress={handlePress}
       activeOpacity={0.88}>
-      {/* Thumbnail */}
       <View style={[styles.imageContainer, { backgroundColor: product.bgColor }]}>
         <Image
           source={product.image}
@@ -33,7 +32,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         />
       </View>
 
-      {/* Details */}
       <View style={styles.infoContainer}>
         <Text style={styles.title} numberOfLines={1}>
           {product.name}
@@ -44,7 +42,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <Text style={styles.price}>{product.priceFormatted}</Text>
       </View>
 
-      {/* Heart Action */}
       <TouchableOpacity
         style={[styles.heartButton, favorited && styles.heartButtonActive]}
         onPress={(e) => {
