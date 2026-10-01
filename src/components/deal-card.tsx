@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { WelcomeDeal } from '@/data/products';
@@ -86,7 +85,10 @@ export const DealCard: React.FC<DealCardProps> = ({
       key={deal.id}
       activeOpacity={0.92}
       style={{ zIndex: isActive ? 20 : 1 }}
-      onPress={onPress}>
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityState={{ selected: isActive }}
+      accessibilityLabel={`${deal.name}, ${deal.promoPriceFormatted}, was ${deal.originalPriceFormatted}`}>
       <Animated.View
         style={[
           styles.productCard,
@@ -106,15 +108,20 @@ export const DealCard: React.FC<DealCardProps> = ({
             ],
           },
         ]}>
-        <View style={styles.cardHeader}>
-          <View style={styles.categoryPill}>
-            <Text style={styles.heroSubLabel} numberOfLines={1}>
-              {deal.subtitle}
-            </Text>
-          </View>
-          <Text style={styles.heroTagline} numberOfLines={1}>
-            {deal.name}
-          </Text>
+        <View
+          style={[
+            styles.cardImgWrapper,
+            { height: imageWrapperHeight },
+          ]}>
+          <Image
+            source={deal.image}
+            style={styles.cardImg}
+            contentFit="cover"
+            transition={200}
+            priority="high"
+            cachePolicy="memory-disk"
+            accessibilityLabel={deal.name}
+          />
         </View>
 
         <View style={styles.cardDiscountBadge}>
@@ -122,40 +129,6 @@ export const DealCard: React.FC<DealCardProps> = ({
             text={deal.discountBadge}
             size={isCompact ? 42 : 46}
           />
-        </View>
-
-        <View
-          style={[
-            styles.cardImgWrapper,
-            { height: imageWrapperHeight },
-          ]}
-          accessibilityLabel={deal.name}>
-          <LinearGradient
-            colors={['#F5F3FF', '#EDE9FE']}
-            style={styles.cardImgGradient}>
-            <Image
-              source={deal.image}
-              style={styles.cardImg}
-              contentFit="contain"
-              transition={200}
-              priority="high"
-              cachePolicy="memory-disk"
-              accessibilityLabel={deal.name}
-            />
-          </LinearGradient>
-        </View>
-
-        <View style={styles.cardFeatureRow}>
-          <View style={styles.featureIconCircle}>
-            <Ionicons
-              name="sparkles"
-              size={10}
-              color="#0D9488"
-            />
-          </View>
-          <Text style={styles.featureText} numberOfLines={1}>
-            {deal.featureDesc}
-          </Text>
         </View>
 
         <View style={styles.cardPriceRow}>
@@ -169,11 +142,6 @@ export const DealCard: React.FC<DealCardProps> = ({
             </Text>
             <Text style={styles.cardPriceOriginal}>
               {deal.originalPriceFormatted}
-            </Text>
-          </View>
-          <View style={styles.saveTag}>
-            <Text style={styles.saveTagText}>
-              SAVE {deal.discountBadge.replace('-', '')}
             </Text>
           </View>
         </View>
@@ -201,14 +169,12 @@ const styles = StyleSheet.create({
   productCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
-    paddingHorizontal: 12,
-    paddingTop: 10,
-    paddingBottom: 8,
     position: 'relative',
     borderWidth: 1.5,
     borderColor: '#EDE9FE',
   },
   productCardActive: {
+    borderColor: '#C084FC',
     shadowColor: '#3B0764',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
@@ -222,94 +188,35 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 3,
   },
-  cardHeader: {
-    marginBottom: 4,
-    paddingRight: 48,
-  },
-  categoryPill: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#F0FDFA',
-    paddingHorizontal: 6,
-    paddingVertical: 1.5,
-    borderRadius: 4,
-    marginBottom: 2,
-  },
-  heroSubLabel: {
-    fontSize: 8,
-    fontWeight: '800',
-    color: '#0D9488',
-    letterSpacing: 0.5,
-  },
-  heroTagline: {
-    fontSize: 11.5,
-    fontWeight: '800',
-    color: '#1A1428',
-    marginTop: 1,
-    letterSpacing: -0.2,
-  },
   cardDiscountBadge: {
     position: 'absolute',
     top: 6,
     right: 6,
     zIndex: 15,
   },
+  // Clips the photo to the card's top corners (card radius minus its border);
+  // the card itself can't clip without also cutting off its iOS shadow.
   cardImgWrapper: {
     width: '100%',
-    borderRadius: 14,
+    borderTopLeftRadius: 16.5,
+    borderTopRightRadius: 16.5,
     overflow: 'hidden',
-    backgroundColor: '#FAF5FF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#F3E8FF',
-  },
-  cardImgGradient: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 14,
-    padding: 4,
+    backgroundColor: '#F5F3FF',
   },
   cardImg: {
     width: '100%',
     height: '100%',
-    borderRadius: 10,
-  },
-  cardFeatureRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 5,
-    paddingHorizontal: 2,
-  },
-  featureIconCircle: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: '#CCFBF1',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  featureText: {
-    flex: 1,
-    fontSize: 8.5,
-    color: '#475569',
-    fontWeight: '600',
   },
   cardPriceRow: {
-    flexDirection: 'row',
+    flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 6,
-    paddingTop: 5,
-    borderTopWidth: 1,
-    borderTopColor: '#F3F0F8',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
   },
   priceCol: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    gap: 6,
+    gap: 7,
   },
   cardPriceMain: {
     fontSize: 20,
@@ -325,20 +232,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#94A3B8',
     textDecorationLine: 'line-through',
-  },
-  saveTag: {
-    backgroundColor: '#DCFCE7',
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#BBF7D0',
-  },
-  saveTagText: {
-    fontSize: 9,
-    fontWeight: '800',
-    color: '#15803D',
-    letterSpacing: 0.3,
   },
   cardBackdropOverlay: {
     position: 'absolute',

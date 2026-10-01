@@ -155,6 +155,7 @@ export const WelcomePromoModal: React.FC = () => {
                 overScrollMode="never"
                 onLayout={onCarouselLayout}
                 contentOffset={{ x: 1 * snapInterval, y: 0 }}
+                style={styles.carouselScroll}
                 contentContainerStyle={[
                   styles.carouselScrollContent,
                   { paddingHorizontal: horizontalInset },
@@ -290,6 +291,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 10,
+  },
+  // Without an explicit width the centring wrapper sizes the scroll view to its
+  // content on web, so it never scrolls and the active card sits off-centre.
+  carouselScroll: {
+    width: '100%',
   },
   carouselScrollContent: {
     paddingVertical: 4,

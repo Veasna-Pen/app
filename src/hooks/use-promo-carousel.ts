@@ -40,17 +40,17 @@ export function usePromoCarousel(isVisible: boolean): UsePromoCarouselReturn {
   const layout = useMemo<CarouselLayout>(() => {
     const isCompact = screenHeight < 740 || screenWidth < 370;
     const isSmallHeight = screenHeight < 680;
-    const cardWidth = Math.min(
-      236,
-      Math.max(200, Math.round(screenWidth * (screenWidth < 360 ? 0.72 : 0.64)))
-    );
-    const cardHeight = isCompact ? 218 : 236;
+    const cardWidth = Math.min(216, Math.max(176, Math.round(screenWidth * 0.54)));
+    // Cards are a portrait photo over a price row; shorter screens get a squarer photo
+    const imageAspect = isSmallHeight ? 1 : isCompact ? 1.12 : 1.25;
+    const imageWrapperHeight = Math.round(cardWidth * imageAspect);
+    const priceRowHeight = isCompact ? 42 : 46;
+    const cardHeight = imageWrapperHeight + priceRowHeight;
     const cardGap = 10;
     const snapInterval = cardWidth + cardGap;
     const horizontalInset = Math.max(0, (screenWidth - cardWidth) / 2);
     const boxWidth = Math.min(screenWidth * 0.9, isCompact ? 306 : 332);
     const buttonWidth = Math.min(boxWidth, isCompact ? 276 : 295);
-    const imageWrapperHeight = isCompact ? 88 : 100;
 
     return {
       isCompact,

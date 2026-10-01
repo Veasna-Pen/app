@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1E1333">
+  <title>Floral Organic | Clean Botanical Skincare</title>
+
+  <!-- Modern Clean Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            skin: {
+              bg: '#FAF9FB',
+              white: '#FFFFFF',
+              dark: '#1A1428',
+              darkHover: '#2A1F3E',
+              subtle: '#F4F2F7',
+              secondary: '#6F6B80',
+              muted: '#A09CAE',
+              border: '#EBE7F2',
+              borderLight: '#F3F0F8',
+              saleRed: '#E54848',
+              saleRedBg: '#FFF1F1',
+              green: '#4ADE80',
+              greenDark: '#052E16',
+              yellow: '#FFE600',
+              gold: '#F5A623',
+              lavender: '#EFEBF8',
+              mint: '#E9F3ED',
+              peach: '#FAEDE4',
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+          },
+          boxShadow: {
+            card: '0 2px 8px rgba(26, 20, 40, 0.04)',
+            cardHover: '0 14px 32px rgba(26, 20, 40, 0.10)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* CSS Reset */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #FAF9FB;
+      color: #1A1428;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Keyboard focus */
+    :focus-visible {
+      outline: 2px solid #7C3AED;
+      outline-offset: 2px;
+    }
+
+    .on-dark :focus-visible,
+    .on-dark:focus-visible {
+      outline-color: #FFFFFF;
+    }
+
+    input[type="search"]::-webkit-search-cancel-button {
+      display: none;
+    }
+
+    /* Hide scrollbars */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Overlays (promo modal + bag drawer): hidden ones stay out of the tab order */
+    .overlay {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+    }
+
+    .overlay.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 0.3s ease, visibility 0s;
+    }
+
+    .promo-card {
+      transform: translateY(12px) scale(0.95);
+      transition: transform 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.1);
+    }
+
+    .overlay.is-open .promo-card {
+      transform: none;
+    }
+
+    .drawer-panel {
+      transform: translateX(100%);
+      transition: transform 0.3s ease-out;
+    }
+
+    .overlay.is-open .drawer-panel {
+      transform: none;
+    }
+
+    /* Category pills */
+    .cat-pill {
+      background: #FFFFFF;
+      color: #6F6B80;
+      border: 1px solid #EBE7F2;
+      font-weight: 600;
+      transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .cat-pill:hover {
+      background: #F4F2F7;
+      color: #1A1428;
+    }
+
+    .cat-pill[aria-pressed="true"] {
+      background: #1A1428;
+      color: #FFFFFF;
+      border-color: #1A1428;
+    }
+
+    /* Fades the clipped edge of the horizontally scrolling pill row */
+    @media (max-width: 639px) {
+      .pill-row {
+        -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+        mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+      }
+    }
+
+    /* Wishlist heart */
+    .fav-btn {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid #EBE7F2;
+      color: #1A1428;
+    }
+
+    .fav-btn svg,
+    #wishlistHeaderIcon {
+      fill: none;
+      stroke: currentColor;
+    }
+
+    .fav-btn[aria-pressed="true"] {
+      background: #FFF1F1;
+      border-color: #FECACA;
+      color: #E54848;
+    }
+
+    .fav-btn[aria-pressed="true"] svg,
+    #wishlistHeaderIcon.is-filled {
+      fill: currentColor;
+    }
+
+    #wishlistHeaderIcon.is-filled {
+      color: #E54848;
+    }
+
+    /* Twinkling sparkle stars */
+    @keyframes sparkleTwinkle {
+
+      0%,
+      100% {
+        transform: scale(0.85) rotate(0deg);
+        opacity: 0.85;
+      }
+
+      50% {
+        transform: scale(1.2) rotate(45deg);
+        opacity: 1;
+      }
+    }
+
+    .sparkle-anim {
+      animation: sparkleTwinkle 2.4s infinite ease-in-out;
+    }
+
+    .sparkle-anim-delay {
+      animation: sparkleTwinkle 2.4s infinite ease-in-out;
+      animation-delay: 1.2s;
+    }
+
+    /* 12-point Jagged Discount Badge */
+    .jagged-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 15;
+    }
+
+    .jagged-layer {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      border-radius: 5px;
+      background: #4ADE80;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
+    }
+
+    .layer-0 {
+      transform: rotate(0deg);
+    }
+
+    .layer-30 {
+      transform: rotate(30deg);
+    }
+
+    .layer-60 {
+      transform: rotate(60deg);
+    }
+
+    .jagged-text {
+      position: relative;
+      z-index: 3;
+      color: #052E16;
+      font-weight: 900;
+      font-size: 11.5px;
+      letter-spacing: -0.5px;
+    }
+
+    /* Deals carousel: side padding lets the first and last card snap to the centre */
+    .deals-track {
+      --deal-card-w: 200px;
+      padding-inline: calc(50% - var(--deal-card-w) / 2);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+      mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+    }
+
+    .deal-card {
+      width: var(--deal-card-w);
+      transition: transform 0.28s cubic-bezier(0.18, 0.89, 0.32, 1.1), opacity 0.28s, box-shadow 0.28s, border-color 0.28s;
+      transform: scale(0.92);
+      opacity: 0.5;
+    }
+
+    .deal-card.active {
+      transform: scale(1.02);
+      opacity: 1;
+      border-color: #C084FC;
+      box-shadow: 0 10px 28px rgba(59, 7, 100, 0.42);
+      z-index: 20;
+    }
+
+    /* 3D Gift Box Flaps */
+    .flap-left {
+      transform: rotate(-18deg) skewY(8deg);
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      background: linear-gradient(135deg, #C084FC 0%, #9333EA 50%, #6B21A8 100%);
+    }
+
+    .flap-right {
+      transform: rotate(18deg) skewY(-8deg);
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      background: linear-gradient(135deg, #C084FC 0%, #9333EA 50%, #6B21A8 100%);
+    }
+
+    /* Short viewports: drop the decorative gift box and shrink the cards so the deals fit without scrolling */
+    @media (max-height: 700px) {
+      .promo-card .gift-box {
+        display: none;
+      }
+
+      .deals-track {
+        --deal-card-w: 172px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-skin-bg text-skin-dark antialiased">
+
+  <!-- ========================================================
+       TOP PROMO TICKER BAR (Full-width Web View)
+       ======================================================== -->
+  <button type="button" id="promoTicker"
+    class="on-dark block w-full h-10 sm:sticky sm:top-0 z-40 bg-gradient-to-r from-[#1E1333] via-[#2F1E4F] to-[#1E1333] text-white border-b border-purple-900/30 text-left">
+    <span class="max-w-5xl mx-auto h-full px-4 sm:px-6 flex items-center justify-between gap-3 text-xs sm:text-sm">
+      <span class="flex items-center gap-2.5 min-w-0">
+        <span
+          class="hidden min-[400px]:inline-block bg-yellow-400/20 border border-yellow-300 text-yellow-300 font-extrabold text-[10px] px-2 py-0.5 rounded tracking-wide flex-shrink-0">
+          BUNDLE DEALS
+        </span>
+        <span class="font-semibold text-white/95 truncate">
+          <span id="tickerText">Extra 20% off · Free shipping</span><span id="tickerExtra" class="hidden sm:inline"> ·
+            US $1.79 Deal</span>
+        </span>
+      </span>
+      <span
+        class="flex items-center gap-1 bg-skin-green text-skin-greenDark font-extrabold text-xs pl-3 pr-2 py-1 rounded-full flex-shrink-0 shadow-sm">
+        <span id="tickerBtnText">Claim</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+        </svg>
+      </span>
+    </span>
+  </button>
+
+  <!-- ========================================================
+       MINIMAL WEB HEADER
+       ======================================================== -->
+  <header class="w-full bg-white/90 backdrop-blur-md border-b border-skin-border sticky top-0 sm:top-10 z-30">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center gap-x-4 gap-y-2.5">
+
+      <!-- Brand Logo -->
+      <a href="#" class="order-1 flex items-center gap-2 flex-shrink-0 rounded-lg" aria-label="Floral home">
+        <span
+          class="w-9 h-9 rounded-xl bg-skin-dark text-white font-serif font-bold text-lg flex items-center justify-center">
+          F
+        </span>
+        <span class="font-serif font-bold text-xl text-skin-dark tracking-tight">FLORAL.</span>
+      </a>
+
+      <!-- Search Input (drops to its own row on phones) -->
+      <div class="order-3 sm:order-2 w-full sm:w-auto sm:flex-1 sm:max-w-md">
+        <div
+          class="h-11 sm:h-10 bg-skin-subtle border border-transparent rounded-full flex items-center pl-4 pr-1.5 gap-2.5 transition focus-within:border-purple-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-purple-100">
+          <svg class="w-4 h-4 text-skin-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            aria-hidden="true">
+            <circle cx="11" cy="11" r="8" stroke-width="2" />
+            <path stroke-linecap="round" stroke-width="2" d="m21 21-4.35-4.35" />
+          </svg>
+          <input type="search" id="searchInput" placeholder="Search skincare products..."
+            aria-label="Search skincare products" autocomplete="off" enterkeyhint="search"
+            class="flex-1 min-w-0 bg-transparent text-base sm:text-sm text-skin-dark placeholder-skin-muted outline-none font-medium">
+          <button type="button" id="searchClearBtn" aria-label="Clear search"
+            class="hidden w-8 h-8 rounded-full items-center justify-center text-skin-secondary hover:text-skin-dark hover:bg-skin-subtle transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="order-2 sm:order-3 ml-auto flex items-center gap-2">
+        <!-- Wishlist Button -->
+        <button type="button" id="wishlistHeaderBtn" aria-label="Favorites"
+          class="w-11 h-11 sm:w-10 sm:h-10 rounded-full border border-skin-border bg-white hover:bg-skin-subtle flex items-center justify-center text-skin-dark relative active:scale-95 transition">
+          <svg id="wishlistHeaderIcon" class="w-[18px] h-[18px]" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          <span id="wishlistCountBadge"
+            class="absolute -top-1 -right-1 bg-skin-dark text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center ring-2 ring-white">1</span>
+        </button>
+
+        <!-- Cart Button -->
+        <button type="button" id="cartHeaderBtn" aria-label="Shopping bag"
+          class="w-11 h-11 sm:w-10 sm:h-10 rounded-full border border-skin-border bg-white hover:bg-skin-subtle flex items-center justify-center text-skin-dark relative active:scale-95 transition">
+          <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+          <span id="cartCountBadge"
+            class="absolute -top-1 -right-1 bg-skin-dark text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center ring-2 ring-white">1</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================
+       FLOATING NOTIFICATION TOAST
+       ======================================================== -->
+  <div id="toastBanner" role="status" aria-live="polite"
+    class="fixed left-1/2 -translate-x-1/2 z-[60] max-w-[calc(100vw-2rem)] pointer-events-none opacity-0 translate-y-3 transition-all duration-200"
+    style="bottom: calc(1.5rem + env(safe-area-inset-bottom))">
+    <div
+      class="bg-skin-dark text-white pl-3 pr-5 py-2.5 rounded-full shadow-xl border border-white/10 flex items-center gap-2.5">
+      <span class="w-6 h-6 rounded-full bg-skin-green/20 flex items-center justify-center flex-shrink-0">
+        <svg class="w-3.5 h-3.5 text-skin-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+        </svg>
+      </span>
+      <span id="toastMessage" class="text-[13px] font-semibold truncate">Notification</span>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MAIN WEB CONTENT
+       ======================================================== -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-5 sm:py-8 space-y-7 sm:space-y-9">
+
+    <!-- Hero Banner (Clean, Minimal & Modern) -->
+    <section id="heroBanner" aria-labelledby="heroTitle"
+      class="group relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#EFE7F8] via-[#E8DEF7] to-[#D9CCF3] border border-white/70 shadow-[0_10px_34px_rgba(26,20,40,0.07)] cursor-pointer">
+      <div class="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-white/50 blur-3xl" aria-hidden="true"></div>
+      <div class="absolute -bottom-28 -left-20 w-72 h-72 rounded-full bg-[#C9B6F0]/40 blur-3xl" aria-hidden="true">
+      </div>
+
+      <div class="relative grid sm:grid-cols-[1fr_auto] items-center gap-6 sm:gap-10 p-6 sm:p-9 lg:p-11">
+        <div class="text-center sm:text-left">
+          <span
+            class="inline-block bg-white/85 border border-white text-[11px] font-bold tracking-wide text-skin-dark px-3 py-1 rounded-full shadow-sm">
+            40% OFF · LIMITED EDIT
+          </span>
+          <h1 id="heroTitle"
+            class="mt-3 text-[32px] sm:text-4xl lg:text-5xl font-serif font-bold text-skin-dark leading-[1.1] tracking-tight">
+            Floral Organic<br> Skin Care
+          </h1>
+          <p class="mt-3 text-sm lg:text-base text-skin-secondary leading-relaxed max-w-sm mx-auto sm:mx-0">
+            Deep cellular hydration powered by organic French lavender and active floral ceramides.
+          </p>
+
+          <div class="mt-5 flex flex-col sm:flex-row sm:flex-wrap items-center gap-x-5 gap-y-3">
+            <button type="button"
+              class="h-11 pl-5 pr-4 flex-shrink-0 whitespace-nowrap rounded-full bg-skin-dark hover:bg-skin-darkHover text-white text-sm font-bold inline-flex items-center gap-2 shadow-md transition active:scale-95">
+              <span>Shop featured collection</span>
+              <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+            <span class="inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-semibold text-skin-secondary">
+              <svg class="w-3.5 h-3.5 flex-shrink-0 text-skin-gold" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 17.5l-5.9 3.2 1.2-6.6L2.5 9.5l6.6-.9L12 2.5z" />
+              </svg>
+              <span><span class="text-skin-dark font-bold">4.9</span> rated · Certified organic</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="relative mx-auto w-44 sm:w-52 lg:w-60 aspect-[4/5] flex-shrink-0">
+          <img src="./assets/products/floral-serum.jpg" alt="Floral Organic Skincare"
+            class="w-full h-full object-cover rounded-3xl shadow-xl ring-4 ring-white/60 transition-transform duration-500 group-hover:scale-[1.03]"
+            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=300&h=300&fit=crop';">
+        </div>
+      </div>
+    </section>
+
+    <!-- Category Filter Pills + Product Grid -->
+    <section aria-labelledby="catalogTitle">
+      <div class="flex items-baseline justify-between mb-3">
+        <h2 id="catalogTitle" class="text-lg sm:text-xl font-bold text-skin-dark tracking-tight">Check All Categories
+        </h2>
+        <span id="productCountBadge" class="text-xs text-skin-secondary font-semibold" aria-live="polite">5 items</span>
+      </div>
+
+      <div class="pill-row flex items-center gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 pb-1">
+        <button type="button"
+          class="cat-pill flex-shrink-0 whitespace-nowrap h-10 flex items-center gap-1.5 px-4 rounded-full text-[13px]"
+          data-cat="all" aria-pressed="true" onclick="filterCategory('all', this)">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z" />
+            <line x1="16" y1="8" x2="2" y2="22" />
+            <line x1="17.5" y1="15" x2="9" y2="15" />
+          </svg>
+          <span>All Categories</span>
+        </button>
+        <button type="button"
+          class="cat-pill flex-shrink-0 whitespace-nowrap h-10 flex items-center gap-1.5 px-4 rounded-full text-[13px]"
+          data-cat="Serum" aria-pressed="false" onclick="filterCategory('Serum', this)">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+          </svg>
+          <span>Serums</span>
+        </button>
+        <button type="button"
+          class="cat-pill flex-shrink-0 whitespace-nowrap h-10 flex items-center gap-1.5 px-4 rounded-full text-[13px]"
+          data-cat="Cream" aria-pressed="false" onclick="filterCategory('Cream', this)">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="5" />
+            <path
+              d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42m12.72-12.72 1.42-1.42" />
+          </svg>
+          <span>Creams</span>
+        </button>
+        <button type="button"
+          class="cat-pill flex-shrink-0 whitespace-nowrap h-10 flex items-center gap-1.5 px-4 rounded-full text-[13px]"
+          data-cat="Cleanser" aria-pressed="false" onclick="filterCategory('Cleanser', this)">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2" />
+          </svg>
+          <span>Cleansers</span>
+        </button>
+      </div>
+
+      <!-- Featured Products Web Grid -->
+      <div id="productGrid" class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyCatalogState"
+        class="hidden mt-4 flex-col items-center justify-center py-14 px-6 text-center bg-white rounded-3xl border border-dashed border-skin-border">
+        <span class="w-14 h-14 rounded-full bg-skin-subtle flex items-center justify-center mb-3">
+          <svg class="w-6 h-6 text-skin-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            aria-hidden="true">
+            <circle cx="11" cy="11" r="8" stroke-width="1.8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        </span>
+        <p class="text-base font-bold text-skin-dark">No products found</p>
+        <p class="text-sm text-skin-secondary mt-1">Try searching with a different keyword or category.</p>
+        <button type="button" onclick="resetFilters()"
+          class="mt-5 h-10 bg-skin-dark text-white text-[13px] font-bold px-5 rounded-full hover:bg-skin-darkHover transition active:scale-95">
+          Clear filters
+        </button>
+      </div>
+    </section>
+
+    <!-- Minimal Promo Callout -->
+    <section
+      class="rounded-3xl bg-white border border-skin-border shadow-card p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3.5">
+        <span
+          class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 text-purple-700 flex items-center justify-center flex-shrink-0">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 1 0 0-5C13 2 12 7 12 7z" />
+          </svg>
+        </span>
+        <div>
+          <h3 class="text-[15px] font-bold text-skin-dark">Unlock Welcome Bundle Offer</h3>
+          <p class="text-[13px] text-skin-secondary mt-0.5">Get an extra 20% discount + free shipping on featured
+            serums.</p>
+        </div>
+      </div>
+      <button type="button" onclick="openWelcomePromo()"
+        class="h-11 bg-skin-green hover:bg-green-400 text-skin-greenDark font-extrabold text-[13px] px-5 rounded-full transition active:scale-95 flex-shrink-0 shadow-sm">
+        View Welcome Deals (-77%)
+      </button>
+    </section>
+
+  </main>
+
+  <!-- ========================================================
+       MINIMAL WEB FOOTER
+       ======================================================== -->
+  <footer class="w-full border-t border-skin-border bg-white mt-10 py-8 text-xs text-skin-secondary">
+    <div
+      class="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col lg:flex-row items-center justify-between gap-2.5 text-center">
+      <span class="font-serif font-bold text-skin-dark text-sm">FLORAL. Organic Skincare</span>
+      <span>100% Certified Organic Botanicals · Formulated in Grasse, France</span>
+      <span>© 2026 FLORAL Inc. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <!-- ========================================================
+       WELCOME PROMO MODAL COMPONENT (Optimized for Web View UX)
+       ======================================================== -->
+  <div id="welcomePromoOverlay" aria-hidden="true"
+    class="overlay on-dark fixed inset-0 bg-[#0C0816]/75 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-6">
+    <!-- Modal Card (scrolls internally when the viewport is short) -->
+    <div role="dialog" aria-modal="true" aria-labelledby="promoTitle"
+      class="promo-card relative w-full max-w-[620px] max-h-full flex flex-col overflow-hidden bg-gradient-to-b from-[#180E2B] via-[#2A1647] to-[#150B24] rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.65)] border border-purple-400/25">
+
+      <!-- Modal Close Button (Top-Right inside card) -->
+      <button type="button" id="promoCloseBtn" onclick="closeWelcomePromo()"
+        class="absolute top-3 right-3 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white transition active:scale-95 cursor-pointer z-50"
+        aria-label="Close welcome deals">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <div class="overflow-y-auto no-scrollbar overscroll-contain px-5 sm:px-7 pt-5 sm:pt-7 flex flex-col items-center">
+
+        <!-- Top Headlines with Twinkling Sparkle Stars (Exact Mobile Text) -->
+        <div class="relative w-full text-center mb-1 px-10">
+          <!-- Sparkle Left -->
+          <div class="absolute top-0 left-2 sm:left-6 pointer-events-none sparkle-anim" aria-hidden="true">
+            <div class="w-4 h-4 relative flex items-center justify-center">
+              <div class="absolute w-1 h-4 rounded-full bg-[#FFE57F]"></div>
+              <div class="absolute w-4 h-1 rounded-full bg-[#FFE57F]"></div>
+              <div class="absolute w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_#FFE57F]"></div>
+            </div>
+          </div>
+
+          <!-- Sparkle Right -->
+          <div class="absolute bottom-0 right-4 sm:right-10 pointer-events-none sparkle-anim-delay" aria-hidden="true">
+            <div class="w-4 h-4 relative flex items-center justify-center">
+              <div class="absolute w-1 h-4 rounded-full bg-white"></div>
+              <div class="absolute w-4 h-1 rounded-full bg-white"></div>
+              <div class="absolute w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_white]"></div>
+            </div>
+          </div>
+
+          <h2 id="promoTitle"
+            class="text-3xl sm:text-4xl font-extrabold text-[#FFE600] tracking-tight leading-none drop-shadow-[0_2px_10px_rgba(255,230,0,0.5)]">
+            Extra 20% off
+          </h2>
+          <p
+            class="text-2xl sm:text-[27px] font-extrabold text-white tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] mt-1">
+            Free shipping
+          </p>
+        </div>
+
+        <!-- Carousel Container with Web View Left/Right Arrows -->
+        <div class="relative self-stretch -mx-5 sm:-mx-7 mt-1 flex items-center" role="group" aria-label="Welcome deals">
+          <!-- Prev Arrow Button (Desktop Friendly) -->
+          <button type="button" onclick="prevDeal()"
+            class="absolute left-2.5 sm:left-4 z-30 w-10 h-10 rounded-full bg-white/15 hover:bg-white/30 backdrop-blur-md border border-white/25 text-white flex items-center justify-center shadow-lg transition active:scale-90 cursor-pointer"
+            aria-label="Previous deal">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <!-- Deals Horizontal Carousel Track -->
+          <div id="modalDealsTrack"
+            class="deals-track relative w-full flex items-stretch gap-3 overflow-x-auto no-scrollbar scroll-smooth py-4 snap-x snap-mandatory">
+            <!-- Rendered by JS from WELCOME_DEALS -->
+          </div>
+
+          <!-- Next Arrow Button (Desktop Friendly) -->
+          <button type="button" onclick="nextDeal()"
+            class="absolute right-2.5 sm:right-4 z-30 w-10 h-10 rounded-full bg-white/15 hover:bg-white/30 backdrop-blur-md border border-white/25 text-white flex items-center justify-center shadow-lg transition active:scale-90 cursor-pointer"
+            aria-label="Next deal">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Pagination Dots (Web Clickable) -->
+        <div id="modalPaginationDots" class="flex items-center">
+          <!-- Rendered by JS from WELCOME_DEALS -->
+        </div>
+
+        <!-- 3D Gift Box Component (Exact Mobile Text) -->
+        <div class="gift-box w-full max-w-[320px] mt-3 flex-shrink-0 flex flex-col items-center" aria-hidden="true">
+          <!-- Flaps -->
+          <div class="w-[96%] flex justify-between items-end h-4 z-10">
+            <div class="flap-left w-12 h-4"></div>
+            <div class="flex-1 h-2 bg-[#280A46]/60"></div>
+            <div class="flap-right w-12 h-4"></div>
+          </div>
+
+          <!-- Front Face -->
+          <div
+            class="w-full py-2.5 px-4 rounded-2xl bg-gradient-to-b from-[#8B5CF6] via-[#7C3AED] to-[#5B21B6] shadow-[0_6px_20px_rgba(74,14,120,0.35)] border border-purple-300/40 relative flex flex-col items-center justify-center">
+            <div class="absolute top-0 inset-x-4 h-[2px] bg-white/40 rounded-full"></div>
+
+            <!-- Sparkles on Gift Box -->
+            <div class="absolute top-2 left-3 sparkle-anim pointer-events-none">
+              <div class="w-3.5 h-3.5 relative flex items-center justify-center">
+                <div class="absolute w-0.5 h-3.5 bg-white rounded-full"></div>
+                <div class="absolute w-3.5 h-0.5 bg-white rounded-full"></div>
+                <div class="absolute w-1 h-1 bg-white rounded-full"></div>
+              </div>
+            </div>
+
+            <div class="absolute bottom-2 right-3 sparkle-anim-delay pointer-events-none">
+              <div class="w-3 h-3 relative flex items-center justify-center">
+                <div class="absolute w-0.5 h-3 bg-[#FFE082] rounded-full"></div>
+                <div class="absolute w-3 h-0.5 bg-[#FFE082] rounded-full"></div>
+                <div class="absolute w-1 h-1 bg-white rounded-full"></div>
+              </div>
+            </div>
+
+            <!-- Frosted Banner (Exact Mobile Text: Bundle Deals / PARTY READY SALE) -->
+            <div
+              class="text-center px-4 py-1.5 rounded-xl border border-white/45 bg-gradient-to-b from-white/25 to-white/10 shadow-inner">
+              <span class="text-white text-[11px] font-bold tracking-[0.5px] block leading-none">Bundle Deals</span>
+              <span
+                class="text-skin-green font-extrabold text-sm sm:text-[15.5px] tracking-[1.2px] uppercase drop-shadow-[0_1px_4px_rgba(74,222,128,0.5)] mt-1 block leading-tight">PARTY
+                READY SALE</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Button (Exact Mobile Text: Shop now) — pinned below the scroll area so it is always reachable -->
+      <div class="flex-shrink-0 flex justify-center px-5 sm:px-7 pt-3 pb-5 sm:pb-7">
+        <button type="button" onclick="claimCurrentWelcomeDeal()"
+          class="w-full max-w-[320px] h-14 bg-skin-green hover:bg-green-400 text-skin-greenDark rounded-full shadow-[0_4px_18px_rgba(74,222,128,0.45)] flex items-center justify-between pl-6 pr-2.5 transition active:scale-95 cursor-pointer">
+          <span class="text-base font-extrabold tracking-tight">Shop now</span>
+          <span class="flex items-center gap-1.5 bg-white/50 pl-3.5 pr-3 h-9 rounded-full">
+            <span id="modalShopNowPrice" class="text-sm font-extrabold text-skin-greenDark">$34.00</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       SLIDE-OUT SHOPPING BAG DRAWER
+       ======================================================== -->
+  <div id="cartDrawerOverlay" aria-hidden="true"
+    class="overlay fixed inset-0 bg-[#0C0816]/60 backdrop-blur-sm z-50 flex justify-end">
+    <div id="cartDrawerPanel" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle"
+      class="drawer-panel w-full max-w-sm bg-white h-full shadow-2xl flex flex-col">
+
+      <!-- Drawer Header -->
+      <div class="px-5 py-4 border-b border-skin-border flex items-center justify-between">
+        <div>
+          <h3 id="cartDrawerTitle" class="font-bold text-lg text-skin-dark leading-tight">Shopping Bag</h3>
+          <span id="cartDrawerSubtitle" class="text-xs text-skin-secondary">1 item in your bag</span>
+        </div>
+        <button type="button" id="cartCloseBtn" onclick="closeCart()" aria-label="Close shopping bag"
+          class="w-10 h-10 rounded-full bg-skin-subtle flex items-center justify-center text-skin-dark hover:bg-skin-border transition active:scale-95">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Items List -->
+      <div id="cartItemsList" class="flex-1 overflow-y-auto overscroll-contain bg-skin-bg p-4 space-y-2.5">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Summary & Checkout -->
+      <div class="px-5 pt-4 border-t border-skin-border bg-white space-y-2.5 text-[13px]"
+        style="padding-bottom: calc(1.25rem + env(safe-area-inset-bottom))">
+
+        <!-- Applied Voucher Badge -->
+        <div id="cartVoucherTag"
+          class="hidden bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold pl-3 pr-1.5 py-1.5 rounded-xl items-center justify-between">
+          <span class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+              <line x1="7" y1="7" x2="7.01" y2="7" />
+            </svg>
+            Extra 20% OFF Active
+          </span>
+          <button type="button" onclick="removeVoucher()"
+            class="text-emerald-700 hover:text-emerald-900 underline text-xs px-2 py-1 rounded-lg">Remove</button>
+        </div>
+
+        <div class="flex justify-between text-skin-secondary">
+          <span>Subtotal</span>
+          <span id="cartSubtotalVal" class="font-bold text-skin-dark">$125.00</span>
+        </div>
+        <div id="cartDiscountRow" class="hidden justify-between text-emerald-700 font-bold">
+          <span>Promo Discount (20%)</span>
+          <span id="cartDiscountVal">-$25.00</span>
+        </div>
+        <div class="flex justify-between text-skin-secondary">
+          <span>Shipping</span>
+          <span class="font-bold text-emerald-600">FREE</span>
+        </div>
+        <div class="flex justify-between items-baseline font-extrabold text-skin-dark pt-2.5 border-t border-skin-border">
+          <span class="text-sm">Total</span>
+          <span id="cartTotalVal" class="text-xl tracking-tight">$125.00</span>
+        </div>
+
+        <button type="button" onclick="proceedToCheckout()"
+          class="w-full h-12 bg-skin-dark hover:bg-skin-darkHover text-white font-bold rounded-full text-sm shadow-md transition active:scale-[0.98] flex items-center justify-center gap-2">
+          <span>Proceed to Checkout</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================
+       JAVASCRIPT LOGIC & STATE MANAGEMENT
+       ======================================================== -->
+  <script>
+    /* DATA STORE (Matches data/products.ts) */
+    const PRODUCTS = [
+      {
+        id: 'floral-skin-serum',
+        name: 'Floral Skin Serum',
+        subtitle: 'Apply on freshly cleansed skin',
+        volume: '120ml + 80ml',
+        price: 147,
+        priceFormatted: '$147',
+        category: 'Serum',
+        bgColor: '#EFEBF8',
+        image: './assets/products/floral-serum.jpg',
+        rating: 4.9
+      },
+      {
+        id: 'sensitive-skin-serum',
+        name: 'Sensitive Skin Serum',
+        subtitle: 'Gently massage into your face',
+        volume: '100ml',
+        price: 125,
+        priceFormatted: '$125',
+        category: 'Serum',
+        bgColor: '#E9F3ED',
+        image: './assets/products/sensitive-serum.jpg',
+        rating: 4.8
+      },
+      {
+        id: 'oily-skin-serum',
+        name: 'Oily Skin Serum',
+        subtitle: 'Balances natural oils & hydrates',
+        volume: '90ml',
+        price: 132,
+        priceFormatted: '$132',
+        category: 'Serum',
+        bgColor: '#FAEDE4',
+        image: './assets/products/oily-serum.jpg',
+        rating: 4.9
+      },
+      {
+        id: 'floral-hydrating-cream',
+        name: 'Floral Hydrating Cream',
+        subtitle: 'Rich moisture lock barrier cream',
+        volume: '60ml',
+        price: 98,
+        priceFormatted: '$98',
+        category: 'Cream',
+        bgColor: '#EFEBF8',
+        image: './assets/products/floral-serum.jpg',
+        rating: 4.9
+      },
+      {
+        id: 'gentle-foam-cleanser',
+        name: 'Gentle Foam Cleanser',
+        subtitle: 'Purifying botanical micro-foam',
+        volume: '150ml',
+        price: 64,
+        priceFormatted: '$64',
+        category: 'Cleanser',
+        bgColor: '#E9F3ED',
+        image: './assets/products/sensitive-serum.jpg',
+        rating: 4.7
+      }
+    ];
+
+    const WELCOME_DEALS = [
+      {
+        id: 'deal-cream',
+        name: 'Floral Hydrating Cream',
+        subtitle: 'ROSE CERAMIDES · 24H MOISTURE',
+        featureDesc: 'Deep moisture lock with rose ceramides',
+        promoPrice: 33,
+        promoPriceFormatted: '$33.00',
+        originalPrice: 98,
+        originalPriceFormatted: '$98.00',
+        discountBadge: '-66%',
+        productId: 'floral-hydrating-cream'
+      },
+      {
+        id: 'deal-serum',
+        name: 'Floral Skin Serum Deluxe',
+        subtitle: '100% ORGANIC BOTANICAL ACTIVE',
+        featureDesc: 'Innovative active botanical complex deeply restores moisture barrier',
+        promoPrice: 34,
+        promoPriceFormatted: '$34.00',
+        originalPrice: 147,
+        originalPriceFormatted: '$147.00',
+        discountBadge: '-77%',
+        productId: 'floral-skin-serum'
+      },
+      {
+        id: 'deal-sensitive',
+        name: 'Sensitive Skin Serum',
+        subtitle: 'CALMING CHAMOMILE & LIPIDS',
+        featureDesc: 'Soothes redness and strengthens skin resilience',
+        promoPrice: 50,
+        promoPriceFormatted: '$50.00',
+        originalPrice: 125,
+        originalPriceFormatted: '$125.00',
+        discountBadge: '-60%',
+        productId: 'sensitive-skin-serum'
+      },
+      {
+        id: 'deal-oily',
+        name: 'Oily Skin Balancing Serum',
+        subtitle: 'PEACH BLOSSOM & ZINC PCA',
+        featureDesc: 'Balances sebum and tightens pores with silky matte finish',
+        promoPrice: 38,
+        promoPriceFormatted: '$38.00',
+        originalPrice: 132,
+        originalPriceFormatted: '$132.00',
+        discountBadge: '-55%',
+        productId: 'oily-skin-serum'
+      }
+    ];
+
+    const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=300&h=300&fit=crop';
+    const HEART_PATH = 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z';
+    const STAR_PATH = 'M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 17.5l-5.9 3.2 1.2-6.6L2.5 9.5l6.6-.9L12 2.5z';
+
+    /* APP STATE */
+    const state = {
+      cart: [
+        { product: PRODUCTS[1], quantity: 1 } // Sensitive Skin Serum by default
+      ],
+      wishlist: [PRODUCTS[0].id],
+      selectedCategory: 'all',
+      searchQuery: '',
+      appliedVoucher: null,
+      activeDealIndex: 1, // Floral Skin Serum Deluxe active by default
+      toastTimer: null
+    };
+
+    /* HELPERS */
+    const formatPrice = (n) => `$${n.toFixed(2)}`;
+
+    function escapeHTML(str) {
+      return String(str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function imgFallback(img) {
+      img.onerror = null;
+      img.src = FALLBACK_IMAGE;
+    }
+
+    /* TOAST NOTIFICATION */
+    function showToast(msg) {
+      if (state.toastTimer) clearTimeout(state.toastTimer);
+      const toast = document.getElementById('toastBanner');
+      document.getElementById('toastMessage').textContent = msg;
+      toast.classList.remove('opacity-0', 'translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      state.toastTimer = setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-3');
+      }, 2200);
+    }
+
+    /* OVERLAY PLUMBING (shared by promo modal + bag drawer) */
+    let lastFocusedBeforeOverlay = null;
+
+    function setScrollLock(locked) {
+      // Pad by the scrollbar width so the page doesn't jump sideways when it disappears
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = locked ? 'hidden' : '';
+      document.body.style.paddingRight = locked && scrollbarWidth > 0 ? `${scrollbarWidth}px` : '';
+    }
+
+    function openOverlay(overlay, focusEl) {
+      if (overlay.classList.contains('is-open')) return;
+      lastFocusedBeforeOverlay = document.activeElement;
+      setScrollLock(true);
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      if (focusEl) focusEl.focus({ preventScroll: true });
+    }
+
+    function closeOverlay(overlay) {
+      if (!overlay.classList.contains('is-open')) return;
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+      setScrollLock(false);
+      if (lastFocusedBeforeOverlay && document.contains(lastFocusedBeforeOverlay)) {
+        lastFocusedBeforeOverlay.focus({ preventScroll: true });
+      }
+      lastFocusedBeforeOverlay = null;
+    }
+
+    function trapFocus(container, e) {
+      const focusables = [...container.querySelectorAll('button, [href], input, [tabindex]:not([tabindex="-1"])')]
+        .filter(el => el.offsetParent !== null);
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+
+      if (!container.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    /* RENDER PRODUCTS GRID */
+    function renderProductGrid() {
+      const grid = document.getElementById('productGrid');
+      const emptyState = document.getElementById('emptyCatalogState');
+      const query = state.searchQuery.trim().toLowerCase();
+      const cat = state.selectedCategory.toLowerCase();
+
+      const filtered = PRODUCTS.filter(p => {
+        const matchesCat = cat === 'all' || p.category.toLowerCase() === cat;
+        const matchesQuery = query === '' ||
+          p.name.toLowerCase().includes(query) ||
+          p.subtitle.toLowerCase().includes(query) ||
+          p.category.toLowerCase().includes(query);
+        return matchesCat && matchesQuery;
+      });
+
+      document.getElementById('productCountBadge').textContent = `${filtered.length} ${filtered.length === 1 ? 'item' : 'items'}`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        grid.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        return;
+      }
+
+      grid.classList.remove('hidden');
+      emptyState.classList.remove('flex');
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(p => {
+        const isFav = state.wishlist.includes(p.id);
+        const name = escapeHTML(p.name);
+        return `
+          <article class="group bg-white rounded-2xl sm:rounded-3xl border border-skin-border shadow-card overflow-hidden flex flex-col transition duration-300 hover:shadow-cardHover hover:-translate-y-0.5">
+            <!-- Thumbnail, Rating & Wishlist -->
+            <div class="relative aspect-[4/5] sm:aspect-square overflow-hidden" style="background-color: ${p.bgColor}">
+              <img src="${p.image}" alt="${name}" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="imgFallback(this)">
+
+              <span class="absolute left-2.5 bottom-2.5 inline-flex items-center gap-1 bg-white/90 backdrop-blur px-2 py-1 rounded-full text-[11px] font-bold text-skin-dark shadow-sm">
+                <svg class="w-3 h-3 text-skin-gold" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="${STAR_PATH}"/></svg>
+                <span><span class="sr-only">Rated </span>${p.rating.toFixed(1)}</span>
+              </span>
+
+              <!-- Wishlist Heart -->
+              <button type="button" onclick="toggleWishlist('${p.id}')" data-fav="${p.id}" aria-pressed="${isFav}" aria-label="Save ${name} to favorites" class="fav-btn absolute top-2.5 right-2.5 w-9 h-9 rounded-full flex items-center justify-center shadow-sm transition active:scale-90">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${HEART_PATH}"/></svg>
+              </button>
+            </div>
+
+            <!-- Product Info -->
+            <div class="p-3 sm:p-4 flex flex-col flex-1">
+              <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-purple-700">${escapeHTML(p.category)} · ${escapeHTML(p.volume)}</span>
+              <h3 class="text-sm sm:text-base font-bold text-skin-dark mt-1 leading-snug line-clamp-2">${name}</h3>
+              <p class="text-xs sm:text-[13px] text-skin-secondary mt-0.5 leading-relaxed line-clamp-2">${escapeHTML(p.subtitle)}</p>
+
+              <!-- Price & Add Action -->
+              <div class="mt-auto pt-3 flex items-center justify-between gap-2">
+                <span class="text-base sm:text-lg font-extrabold text-skin-dark tracking-tight">${p.priceFormatted}</span>
+                <button type="button" onclick="addToCartById('${p.id}')" aria-label="Add ${name} to bag" class="relative h-9 pl-2.5 pr-3.5 bg-skin-dark hover:bg-skin-darkHover text-white text-xs font-bold rounded-full transition active:scale-95 flex items-center gap-1 shadow-sm">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                  <span>Add</span>
+                  <span data-bag-count="${p.id}" class="hidden absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-skin-green text-skin-greenDark text-[10px] font-extrabold items-center justify-center ring-2 ring-white"></span>
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      syncBagBadges();
+    }
+
+    // Shows how many of each product are already in the bag on its "Add" button
+    function syncBagBadges() {
+      document.querySelectorAll('[data-bag-count]').forEach(badge => {
+        const item = state.cart.find(i => i.product.id === badge.dataset.bagCount);
+        const qty = item ? item.quantity : 0;
+        badge.textContent = qty;
+        badge.classList.toggle('hidden', qty === 0);
+        badge.classList.toggle('flex', qty > 0);
+      });
+    }
+
+    /* WISHLIST TOGGLE */
+    function toggleWishlist(id) {
+      const idx = state.wishlist.indexOf(id);
+      const prod = PRODUCTS.find(p => p.id === id);
+      if (idx > -1) {
+        state.wishlist.splice(idx, 1);
+        showToast('Removed from favorites');
+      } else {
+        state.wishlist.push(id);
+        showToast(`Saved ${prod ? prod.name : 'item'} to favorites`);
+      }
+      updateWishlistUI();
+    }
+
+    function updateWishlistUI() {
+      const count = state.wishlist.length;
+      const badge = document.getElementById('wishlistCountBadge');
+      badge.textContent = count;
+      badge.style.display = count > 0 ? 'flex' : 'none';
+      document.getElementById('wishlistHeaderIcon').classList.toggle('is-filled', count > 0);
+      document.querySelectorAll('[data-fav]').forEach(btn => {
+        btn.setAttribute('aria-pressed', String(state.wishlist.includes(btn.dataset.fav)));
+      });
+    }
+
+    /* CART OPERATIONS */
+    function addToCartById(id) {
+      const prod = PRODUCTS.find(p => p.id === id);
+      if (!prod) return;
+      const existing = state.cart.find(item => item.product.id === id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        state.cart.push({ product: prod, quantity: 1 });
+      }
+      updateCartUI();
+      showToast(`Added ${prod.name} to bag`);
+    }
+
+    function updateQuantity(id, delta) {
+      const item = state.cart.find(i => i.product.id === id);
+      if (!item) return;
+      item.quantity += delta;
+      if (item.quantity <= 0) {
+        state.cart = state.cart.filter(i => i.product.id !== id);
+        showToast('Item removed from bag');
+      }
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const totalCount = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+
+      // Update badges
+      document.getElementById('cartCountBadge').textContent = totalCount;
+      document.getElementById('cartCountBadge').style.display = totalCount > 0 ? 'flex' : 'none';
+      document.getElementById('cartDrawerSubtitle').textContent = `${totalCount} ${totalCount === 1 ? 'item' : 'items'} in your bag`;
+      syncBagBadges();
+
+      // Render items inside drawer (keeping keyboard focus on the stepper that was just pressed)
+      const list = document.getElementById('cartItemsList');
+      const focusedStepper = list.contains(document.activeElement) ? document.activeElement.dataset.stepper : null;
+
+      if (state.cart.length === 0) {
+        list.innerHTML = `
+          <div class="h-full min-h-[240px] flex flex-col items-center justify-center text-center px-6">
+            <span class="w-16 h-16 rounded-full bg-white border border-skin-border flex items-center justify-center mb-3">
+              <svg class="w-7 h-7 text-skin-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            </span>
+            <p class="font-bold text-skin-dark text-base">Your bag is empty</p>
+            <p class="text-[13px] text-skin-secondary mt-1">Explore our organic formulas and add your favorites.</p>
+            <button type="button" onclick="closeCart()" class="mt-5 h-10 px-5 rounded-full border border-skin-border bg-white hover:bg-skin-subtle text-[13px] font-bold text-skin-dark transition active:scale-95">Continue shopping</button>
+          </div>
+        `;
+      } else {
+        list.innerHTML = state.cart.map(item => {
+          const p = item.product;
+          const name = escapeHTML(p.name);
+          const removes = item.quantity === 1;
+          return `
+          <div class="flex items-center gap-3 p-2.5 bg-white rounded-2xl border border-skin-border shadow-card">
+            <img src="${p.image}" alt="" class="w-16 h-16 object-cover rounded-xl flex-shrink-0" style="background-color: ${p.bgColor}" onerror="imgFallback(this)">
+            <div class="flex-1 min-w-0">
+              <h4 class="text-[13px] font-bold text-skin-dark truncate">${name}</h4>
+              <span class="text-[11px] text-skin-secondary block">${escapeHTML(p.volume || '100ml')}</span>
+              <span class="flex items-baseline gap-1.5 mt-0.5">
+                <span class="text-sm font-extrabold text-skin-dark">${formatPrice(p.price)}</span>
+                ${p.compareAtPrice ? `<s class="text-[11px] font-semibold text-skin-muted">${formatPrice(p.compareAtPrice)}</s>` : ''}
+              </span>
+            </div>
+            <div class="flex items-center gap-0.5 bg-skin-subtle rounded-full p-1 flex-shrink-0">
+              <button type="button" onclick="updateQuantity('${p.id}', -1)" data-stepper="${p.id}:-1" aria-label="${removes ? 'Remove' : 'Decrease quantity of'} ${name}" class="w-7 h-7 rounded-full bg-white shadow-sm flex items-center justify-center transition active:scale-90 ${removes ? 'text-skin-saleRed' : 'text-skin-dark'}">
+                ${removes
+                  ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m-9 0 1 14h8l1-14"/></svg>'
+                  : '<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>'}
+              </button>
+              <span class="text-[13px] font-bold text-skin-dark w-6 text-center" aria-label="Quantity">${item.quantity}</span>
+              <button type="button" onclick="updateQuantity('${p.id}', 1)" data-stepper="${p.id}:1" aria-label="Increase quantity of ${name}" class="w-7 h-7 rounded-full bg-white shadow-sm flex items-center justify-center text-skin-dark transition active:scale-90">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+            </div>
+          </div>
+        `;
+        }).join('');
+      }
+
+      if (focusedStepper) {
+        const next = list.querySelector(`[data-stepper="${focusedStepper}"]`) || list.querySelector('button') || document.getElementById('cartCloseBtn');
+        next.focus({ preventScroll: true });
+      }
+
+      // Calculations
+      const subtotal = state.cart.reduce((s, i) => s + (i.product.price * i.quantity), 0);
+      document.getElementById('cartSubtotalVal').textContent = formatPrice(subtotal);
+
+      const voucherTag = document.getElementById('cartVoucherTag');
+      const discountRow = document.getElementById('cartDiscountRow');
+      const tickerText = document.getElementById('tickerText');
+      const tickerExtra = document.getElementById('tickerExtra');
+      const tickerBtnText = document.getElementById('tickerBtnText');
+
+      if (state.appliedVoucher) {
+        voucherTag.classList.remove('hidden');
+        voucherTag.classList.add('flex');
+        discountRow.classList.remove('hidden');
+        discountRow.classList.add('flex');
+
+        const discount = (subtotal * state.appliedVoucher.percent) / 100;
+        document.getElementById('cartDiscountVal').textContent = `-${formatPrice(discount)}`;
+        const total = Math.max(0, subtotal - discount);
+        document.getElementById('cartTotalVal').textContent = formatPrice(total);
+
+        tickerText.textContent = 'Extra 20% OFF Active + Free Shipping';
+        tickerExtra.textContent = '';
+        tickerBtnText.textContent = 'View';
+      } else {
+        voucherTag.classList.remove('flex');
+        voucherTag.classList.add('hidden');
+        discountRow.classList.remove('flex');
+        discountRow.classList.add('hidden');
+        document.getElementById('cartTotalVal').textContent = formatPrice(subtotal);
+
+        tickerText.textContent = 'Extra 20% off · Free shipping';
+        tickerExtra.textContent = ' · US $1.79 Deal';
+        tickerBtnText.textContent = 'Claim';
+      }
+    }
+
+    function removeVoucher() {
+      state.appliedVoucher = null;
+      updateCartUI();
+      showToast('Voucher removed');
+    }
+
+    function openCart() {
+      openOverlay(document.getElementById('cartDrawerOverlay'), document.getElementById('cartCloseBtn'));
+    }
+
+    function closeCart() {
+      closeOverlay(document.getElementById('cartDrawerOverlay'));
+    }
+
+    function proceedToCheckout() {
+      if (state.cart.length === 0) {
+        showToast('Your bag is empty');
+        return;
+      }
+      showToast('Connecting to Checkout...');
+    }
+
+    /* WELCOME PROMO MODAL LOGIC (Web View UX Optimized) */
+    function renderDeals() {
+      document.getElementById('modalDealsTrack').innerHTML = WELCOME_DEALS.map((deal, i) => {
+        const prod = PRODUCTS.find(p => p.id === deal.productId) || PRODUCTS[0];
+        const name = escapeHTML(deal.name);
+        return `
+          <div class="deal-card flex-shrink-0 snap-center bg-white rounded-2xl overflow-hidden border-2 border-purple-100 shadow-md relative cursor-pointer" data-index="${i}" onclick="selectDeal(${i})">
+            <!-- Image (the product name lives in the alt text and the pagination dot label) -->
+            <div class="relative w-full aspect-[4/5] bg-gradient-to-br from-[#F5F3FF] to-[#EDE9FE]">
+              <img src="${prod.image}" alt="${name}" class="absolute inset-0 w-full h-full object-cover" onerror="imgFallback(this)">
+              <!-- Jagged Badge -->
+              <div class="jagged-badge">
+                <div class="jagged-layer layer-0"></div>
+                <div class="jagged-layer layer-30"></div>
+                <div class="jagged-layer layer-60"></div>
+                <span class="jagged-text">${escapeHTML(deal.discountBadge)}</span>
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div class="flex items-baseline justify-center gap-2 px-3 py-2.5">
+              <span class="text-xl font-extrabold text-skin-dark tracking-tight">${deal.promoPriceFormatted}</span>
+              <s class="text-[13px] font-semibold text-slate-400">${deal.originalPriceFormatted}</s>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Each dot gets a padded hit area around the small visible pill
+      document.getElementById('modalPaginationDots').innerHTML = WELCOME_DEALS.map((deal, i) => `
+        <button type="button" onclick="selectDeal(${i})" class="deal-dot group/dot h-6 px-[3px] flex items-center" aria-label="Deal ${i + 1}: ${escapeHTML(deal.name)}">
+          <span class="block h-2 w-2 rounded-full bg-white/30 group-hover/dot:bg-white/60 transition-all duration-200"></span>
+        </button>
+      `).join('');
+    }
+
+    function openWelcomePromo() {
+      openOverlay(document.getElementById('welcomePromoOverlay'), document.getElementById('promoCloseBtn'));
+      scrollCarousel(false);
+    }
+
+    function closeWelcomePromo() {
+      closeOverlay(document.getElementById('welcomePromoOverlay'));
+    }
+
+    function prevDeal() {
+      const nextIdx = (state.activeDealIndex - 1 + WELCOME_DEALS.length) % WELCOME_DEALS.length;
+      selectDeal(nextIdx);
+    }
+
+    function nextDeal() {
+      const nextIdx = (state.activeDealIndex + 1) % WELCOME_DEALS.length;
+      selectDeal(nextIdx);
+    }
+
+    function setActiveDeal(idx) {
+      state.activeDealIndex = idx;
+      const deal = WELCOME_DEALS[idx];
+
+      // Update card visual states
+      document.querySelectorAll('#modalDealsTrack .deal-card').forEach((card, i) => {
+        card.classList.toggle('active', i === idx);
+      });
+
+      // Update pagination dots (Web View UX indicator)
+      document.querySelectorAll('#modalPaginationDots .deal-dot').forEach((dot, i) => {
+        const isActive = i === idx;
+        dot.setAttribute('aria-current', String(isActive));
+        dot.firstElementChild.className = isActive
+          ? 'block h-2 w-5 rounded-full bg-skin-green transition-all duration-200'
+          : 'block h-2 w-2 rounded-full bg-white/30 group-hover/dot:bg-white/60 transition-all duration-200';
+      });
+
+      document.getElementById('modalShopNowPrice').textContent = deal.promoPriceFormatted;
+    }
+
+    function selectDeal(idx) {
+      setActiveDeal(idx);
+      scrollCarousel();
+    }
+
+    function scrollCarousel(smooth = true) {
+      const track = document.getElementById('modalDealsTrack');
+      const card = track.querySelector(`.deal-card[data-index="${state.activeDealIndex}"]`);
+      if (card) {
+        const offset = card.offsetLeft - (track.clientWidth / 2) + (card.offsetWidth / 2);
+        dealScrollIsProgrammatic = true;
+        track.scrollTo({ left: offset, behavior: smooth ? 'smooth' : 'instant' });
+      }
+    }
+
+    // After a swipe / trackpad scroll settles, the card nearest the centre becomes the active deal.
+    // Scrolls we started ourselves are skipped so a slow animation can't undo the selection.
+    let dealScrollIsProgrammatic = false;
+
+    function syncActiveDealFromScroll() {
+      if (dealScrollIsProgrammatic) return;
+      const track = document.getElementById('modalDealsTrack');
+      const center = track.scrollLeft + track.clientWidth / 2;
+      let nearest = state.activeDealIndex;
+      let nearestDist = Infinity;
+      track.querySelectorAll('.deal-card').forEach((card, i) => {
+        const dist = Math.abs(card.offsetLeft + card.offsetWidth / 2 - center);
+        if (dist < nearestDist) {
+          nearestDist = dist;
+          nearest = i;
+        }
+      });
+      if (nearest !== state.activeDealIndex) setActiveDeal(nearest);
+    }
+
+    function claimCurrentWelcomeDeal() {
+      const deal = WELCOME_DEALS[state.activeDealIndex];
+      const targetProd = PRODUCTS.find(p => p.id === deal.productId) || PRODUCTS[0];
+
+      // Apply 20% discount voucher
+      state.appliedVoucher = {
+        code: 'EXTRA20',
+        percent: 20,
+        label: 'Extra 20% OFF'
+      };
+
+      // Add promotional deal item
+      const exists = state.cart.find(i => i.product.id === targetProd.id);
+      if (!exists) {
+        state.cart.push({
+          product: {
+            ...targetProd,
+            price: deal.promoPrice,
+            priceFormatted: deal.promoPriceFormatted,
+            compareAtPrice: deal.originalPrice
+          },
+          quantity: 1
+        });
+      }
+
+      closeWelcomePromo();
+      updateCartUI();
+      showToast(`Extra 20% OFF + ${deal.name} added!`);
+    }
+
+    /* CATEGORY FILTERING */
+    function filterCategory(cat, btn) {
+      state.selectedCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(b => {
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+      btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      renderProductGrid();
+    }
+
+    function resetFilters() {
+      state.searchQuery = '';
+      state.selectedCategory = 'all';
+      document.getElementById('searchInput').value = '';
+      setSearchClearVisible(false);
+      const allBtn = document.querySelector('.cat-pill[data-cat="all"]');
+      if (allBtn) filterCategory('all', allBtn);
+      else renderProductGrid();
+    }
+
+    /* SEARCH FILTERING */
+    const searchInput = document.getElementById('searchInput');
+    const searchClearBtn = document.getElementById('searchClearBtn');
+
+    function setSearchClearVisible(visible) {
+      searchClearBtn.classList.toggle('hidden', !visible);
+      searchClearBtn.classList.toggle('flex', visible);
+    }
+
+    searchInput.addEventListener('input', (e) => {
+      state.searchQuery = e.target.value;
+      setSearchClearVisible(state.searchQuery.length > 0);
+      renderProductGrid();
+    });
+
+    searchClearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      state.searchQuery = '';
+      setSearchClearVisible(false);
+      renderProductGrid();
+      searchInput.focus();
+    });
+
+    /* EVENT LISTENERS */
+    document.getElementById('promoTicker').addEventListener('click', openWelcomePromo);
+    document.getElementById('heroBanner').addEventListener('click', openWelcomePromo);
+    document.getElementById('cartHeaderBtn').addEventListener('click', openCart);
+    document.getElementById('wishlistHeaderBtn').addEventListener('click', () => {
+      showToast(`${state.wishlist.length} item(s) in your favorites`);
+    });
+
+    // Click outside to dismiss modals
+    document.getElementById('cartDrawerOverlay').addEventListener('click', (e) => {
+      if (e.target.id === 'cartDrawerOverlay') closeCart();
+    });
+    document.getElementById('welcomePromoOverlay').addEventListener('click', (e) => {
+      if (e.target.id === 'welcomePromoOverlay') closeWelcomePromo();
+    });
+
+    // Keyboard Shortcuts for Web View (Esc to close, Tab stays inside, Arrow keys to navigate deals)
+    document.addEventListener('keydown', (e) => {
+      const openEl = document.querySelector('.overlay.is-open');
+      if (!openEl) return;
+      const isPromo = openEl.id === 'welcomePromoOverlay';
+
+      if (e.key === 'Escape') {
+        if (isPromo) closeWelcomePromo();
+        else closeCart();
+      } else if (e.key === 'Tab') {
+        trapFocus(openEl, e);
+      } else if (isPromo && e.key === 'ArrowLeft') {
+        prevDeal();
+      } else if (isPromo && e.key === 'ArrowRight') {
+        nextDeal();
+      }
+    });
+
+    // Keep the active deal in step with touch swipes / trackpad scrolling on the track
+    const dealsTrack = document.getElementById('modalDealsTrack');
+    let dealScrollTimer = null;
+    dealsTrack.addEventListener('scroll', () => {
+      clearTimeout(dealScrollTimer);
+      dealScrollTimer = setTimeout(syncActiveDealFromScroll, 120);
+    }, { passive: true });
+    ['touchstart', 'pointerdown', 'wheel'].forEach(type => {
+      dealsTrack.addEventListener(type, () => { dealScrollIsProgrammatic = false; }, { passive: true });
+    });
+
+    window.addEventListener('resize', () => scrollCarousel(false));
+
+    /* INITIALIZE */
+    renderDeals();
+    renderProductGrid();
+    updateWishlistUI();
+    updateCartUI();
+    setActiveDeal(state.activeDealIndex); // Default to Floral Skin Serum Deluxe
+
+    // Auto-launch the WelcomePromoModal after 450ms (Matches HomeScreen React Native timing)
+    setTimeout(() => {
+      openWelcomePromo();
+    }, 450);
+  </script>
+</body>
+
+</html>
