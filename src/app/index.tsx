@@ -6,12 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
 
 import { PRODUCTS } from '@/data/products';
 import { SkincareColors } from '@/constants/skincare-theme';
@@ -79,15 +79,8 @@ export default function HomeScreen() {
             <TouchableOpacity
               style={styles.actionBtn}
               onPress={() => {
-                // If wishlist has items, quick-filter or alert
                 if (wishlist.length > 0) {
-                  const firstWish = PRODUCTS.find((p) => wishlist.includes(p.id));
-                  if (firstWish) {
-                    router.push({
-                      pathname: '/product/[id]',
-                      params: { id: firstWish.id },
-                    });
-                  }
+                  Alert.alert('Not Available', 'Product details are not available.');
                 }
               }}
               activeOpacity={0.75}>
@@ -159,10 +152,7 @@ export default function HomeScreen() {
             style={styles.bannerContainer}
             activeOpacity={0.92}
             onPress={() =>
-              router.push({
-                pathname: '/product/[id]',
-                params: { id: featuredSerum.id },
-              })
+              Alert.alert('Not Available', 'Product details are not available.')
             }>
             <LinearGradient
               colors={['#EDE5F8', '#DDD2F5']}

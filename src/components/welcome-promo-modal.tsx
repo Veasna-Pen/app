@@ -1,31 +1,24 @@
-import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Animated,
-  Dimensions,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  ScrollView,
-} from 'react-native';
-import { Image } from 'expo-image';
-import { Feather, Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useStore } from '@/context/store-context';
 import { WELCOME_DEALS } from '@/data/products';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
-const CARD_WIDTH = Math.min(236, Math.round(SCREEN_WIDTH * 0.64));
-const CARD_HEIGHT = 236;
-const CARD_GAP = 10;
-const SNAP_INTERVAL = CARD_WIDTH + CARD_GAP;
-const HORIZONTAL_INSET = (SCREEN_WIDTH - CARD_WIDTH) / 2;
+import { Feather, Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Animated,
+  Modal,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // 12-pointed scalloped starburst discount badge
 const JaggedBadge: React.FC<{
@@ -67,6 +60,7 @@ const JaggedBadge: React.FC<{
           borderRadius: radius,
           backgroundColor: color,
           transform: [{ rotate: '30deg' }],
+
         }}
       />
       <View
@@ -102,16 +96,16 @@ const SparkleStar: React.FC<{
 }> = ({ size = 20, color = '#FFFFFF', style, animValue }) => {
   const scale = animValue
     ? animValue.interpolate({
-        inputRange: [0, 0.5, 1],
-        outputRange: [0.85, 1.2, 0.85],
-      })
+      inputRange: [0, 0.5, 1],
+      outputRange: [0.85, 1.2, 0.85],
+    })
     : 1;
 
   const rotate = animValue
     ? animValue.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0deg', '45deg'],
-      })
+      inputRange: [0, 1],
+      outputRange: ['0deg', '45deg'],
+    })
     : '0deg';
 
   return (
@@ -164,18 +158,38 @@ const SparkleStar: React.FC<{
 export const WelcomePromoModal: React.FC = () => {
   const { isWelcomePromoOpen, closeWelcomePromo, claimWelcomeDeal } = useStore();
   const insets = useSafeAreaInsets();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+
+  // Responsive dimensions for Android & iOS
+  const isCompact = screenHeight < 740 || screenWidth < 370;
+  const isSmallHeight = screenHeight < 680;
+
+  const cardWidth = Math.min(
+    236,
+    Math.max(200, Math.round(screenWidth * (screenWidth < 360 ? 0.72 : 0.64)))
+  );
+  const cardHeight = isCompact ? 218 : 236;
+  const cardGap = 10;
+  const snapInterval = cardWidth + cardGap;
+  const horizontalInset = Math.max(0, (screenWidth - cardWidth) / 2);
+  const boxWidth = Math.min(screenWidth * 0.9, isCompact ? 306 : 332);
+  const buttonWidth = Math.min(boxWidth, isCompact ? 276 : 295);
+  const imageWrapperHeight = isCompact ? 88 : 100;
 
   const [activeIndex, setActiveIndex] = useState(1); // Default to Center Deal (Deluxe Serum)
   const scrollRef = useRef<ScrollView>(null);
+  const hasInitializedScroll = useRef(false);
 
   // Animations
   const [fadeAnim] = useState(() => new Animated.Value(0));
   const [scaleAnim] = useState(() => new Animated.Value(0.85));
   const [sparkleAnim] = useState(() => new Animated.Value(0));
-  const [scrollX] = useState(() => new Animated.Value(1 * SNAP_INTERVAL));
+  const [scrollX] = useState(() => new Animated.Value(1 * snapInterval));
 
   useEffect(() => {
     if (isWelcomePromoOpen) {
+      scrollX.setValue(1 * snapInterval);
+      hasInitializedScroll.current = false;
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
@@ -206,13 +220,16 @@ export const WelcomePromoModal: React.FC = () => {
       );
       sparkleLoop.start();
 
-      // Native initial scroll to center deal
+      // Native initial scroll to center deal (index 1) on both Android & iOS
       const timer = setTimeout(() => {
-        scrollRef.current?.scrollTo({
-          x: 1 * SNAP_INTERVAL,
-          animated: false,
-        });
-      }, 40);
+        if (!hasInitializedScroll.current) {
+          hasInitializedScroll.current = true;
+          scrollRef.current?.scrollTo({
+            x: 1 * snapInterval,
+            animated: false,
+          });
+        }
+      }, 60);
 
       return () => {
         clearTimeout(timer);
@@ -222,7 +239,17 @@ export const WelcomePromoModal: React.FC = () => {
       fadeAnim.setValue(0);
       scaleAnim.setValue(0.85);
     }
-  }, [isWelcomePromoOpen, fadeAnim, scaleAnim, sparkleAnim]);
+  }, [isWelcomePromoOpen, fadeAnim, scaleAnim, sparkleAnim, snapInterval, scrollX]);
+
+  const onCarouselLayout = useCallback(() => {
+    if (!hasInitializedScroll.current) {
+      hasInitializedScroll.current = true;
+      scrollRef.current?.scrollTo({
+        x: 1 * snapInterval,
+        animated: false,
+      });
+    }
+  }, [snapInterval]);
 
   const handleClose = () => {
     Animated.timing(fadeAnim, {
@@ -242,29 +269,41 @@ export const WelcomePromoModal: React.FC = () => {
   const handleScroll = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const offsetX = e.nativeEvent.contentOffset.x;
-      const index = Math.round(offsetX / SNAP_INTERVAL);
+      const index = Math.round(offsetX / snapInterval);
       if (index >= 0 && index < WELCOME_DEALS.length && index !== activeIndex) {
         setActiveIndex(index);
       }
     },
-    [activeIndex]
+    [snapInterval, activeIndex]
   );
 
-  const scrollToIndex = useCallback((index: number) => {
-    setActiveIndex(index);
-    scrollRef.current?.scrollTo({
-      x: index * SNAP_INTERVAL,
-      animated: true,
-    });
-  }, []);
+  const handleMomentumScrollEnd = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const offsetX = e.nativeEvent.contentOffset.x;
+      const index = Math.round(offsetX / snapInterval);
+      if (index >= 0 && index < WELCOME_DEALS.length) {
+        setActiveIndex(index);
+      }
+    },
+    [snapInterval]
+  );
+
+  const scrollToIndex = useCallback(
+    (index: number) => {
+      setActiveIndex(index);
+      scrollRef.current?.scrollTo({
+        x: index * snapInterval,
+        animated: true,
+      });
+    },
+    [snapInterval]
+  );
 
   const handleShopNow = () => {
     claimWelcomeDeal(currentDeal);
   };
 
   if (!isWelcomePromoOpen) return null;
-
-  const boxWidth = Math.min(SCREEN_WIDTH * 0.88, 330);
 
   return (
     <Modal
@@ -279,20 +318,49 @@ export const WelcomePromoModal: React.FC = () => {
           <View style={styles.backdropBg} />
         </TouchableWithoutFeedback>
 
+        {/* Top-Right Small Close Button near Status Bar */}
+        <Animated.View
+          style={[
+            styles.closeBtnContainer,
+            {
+              top: insets.top > 0 ? insets.top + 8 : 16,
+              right: 18,
+              opacity: fadeAnim,
+            },
+          ]}>
+          <TouchableOpacity
+            style={styles.closeBtnTopRight}
+            onPress={handleClose}
+            activeOpacity={0.7}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+            <Feather name="x" size={16} color="#FFFFFF" />
+          </TouchableOpacity>
+        </Animated.View>
+
         {/* Foreground Content */}
         <Animated.View
           style={[
             styles.modalContent,
             {
-              paddingTop: Math.max(insets.top + 8, 22),
-              paddingBottom: Math.max(insets.bottom + 12, 18),
+              paddingTop: Math.max(
+                insets.top + (isSmallHeight ? 4 : 8),
+                isSmallHeight ? 12 : 20
+              ),
+              paddingBottom: Math.max(
+                insets.bottom + (isSmallHeight ? 6 : 10),
+                isSmallHeight ? 10 : 16
+              ),
               opacity: fadeAnim,
               transform: [{ scale: scaleAnim }],
             },
           ]}
           pointerEvents="box-none">
           {/* Headline Section */}
-          <View style={styles.headlineContainer}>
+          <View
+            style={[
+              styles.headlineContainer,
+              { marginBottom: isSmallHeight ? 3 : 6 },
+            ]}>
             <SparkleStar
               size={18}
               color="#FFE57F"
@@ -305,23 +373,40 @@ export const WelcomePromoModal: React.FC = () => {
               animValue={sparkleAnim}
               style={styles.sparkleHeadRight}
             />
-            <Text style={styles.yellowHeadline}>Extra 20% off</Text>
-            <Text style={styles.whiteHeadline}>Free shipping</Text>
+            <Text
+              style={[
+                styles.yellowHeadline,
+                isCompact && styles.yellowHeadlineCompact,
+              ]}>
+              Extra 20% off
+            </Text>
+            <Text
+              style={[
+                styles.whiteHeadline,
+                isCompact && styles.whiteHeadlineCompact,
+              ]}>
+              Free shipping
+            </Text>
           </View>
 
           <View style={styles.showcaseWrapper}>
-            <View style={styles.carouselWrapper}>
+            <View
+              style={[styles.carouselWrapper, { height: cardHeight + 8 }]}>
               <Animated.ScrollView
                 ref={scrollRef}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                decelerationRate="fast"
-                snapToInterval={SNAP_INTERVAL}
+                decelerationRate={Platform.OS === 'ios' ? 'fast' : 0.98}
+                snapToInterval={snapInterval}
                 snapToAlignment="start"
-                contentOffset={{ x: 1 * SNAP_INTERVAL, y: 0 }}
+                disableIntervalMomentum={Platform.OS === 'android'}
+                bounces={false}
+                overScrollMode="never"
+                onLayout={onCarouselLayout}
+                contentOffset={{ x: 1 * snapInterval, y: 0 }}
                 contentContainerStyle={[
                   styles.carouselScrollContent,
-                  { paddingHorizontal: HORIZONTAL_INSET },
+                  { paddingHorizontal: horizontalInset },
                 ]}
                 onScroll={Animated.event(
                   [{ nativeEvent: { contentOffset: { x: scrollX } } }],
@@ -330,41 +415,50 @@ export const WelcomePromoModal: React.FC = () => {
                     listener: handleScroll,
                   }
                 )}
+                onMomentumScrollEnd={handleMomentumScrollEnd}
                 scrollEventThrottle={16}>
                 {WELCOME_DEALS.map((deal, idx) => {
                   const inputRange = [
-                    (idx - 1) * SNAP_INTERVAL,
-                    idx * SNAP_INTERVAL,
-                    (idx + 1) * SNAP_INTERVAL,
+                    (idx - 1) * snapInterval,
+                    idx * snapInterval,
+                    (idx + 1) * snapInterval,
                   ];
 
                   const scale = scrollX.interpolate({
                     inputRange,
-                    outputRange: [0.85, 1, 0.85],
+                    outputRange: [0.88, 1, 0.88],
                     extrapolate: 'clamp',
                   });
 
-                  const opacity = scrollX.interpolate({
-                    inputRange,
-                    outputRange: [0.15, 1, 0.15],
+                  const backdropInputRange = [
+                    (idx - 0.75) * snapInterval,
+                    (idx - 0.18) * snapInterval,
+                    idx * snapInterval,
+                    (idx + 0.18) * snapInterval,
+                    (idx + 0.75) * snapInterval,
+                  ];
+
+                  const backdropOpacity = scrollX.interpolate({
+                    inputRange: backdropInputRange,
+                    outputRange: [1, 0, 0, 0, 1],
                     extrapolate: 'clamp',
                   });
 
                   const translateX = scrollX.interpolate({
                     inputRange,
-                    outputRange: [-16, 0, 16],
+                    outputRange: [-12, 0, 12],
                     extrapolate: 'clamp',
                   });
 
                   const rotate = scrollX.interpolate({
                     inputRange,
-                    outputRange: ['-3deg', '0deg', '3deg'],
+                    outputRange: ['-2.5deg', '0deg', '2.5deg'],
                     extrapolate: 'clamp',
                   });
 
                   const translateY = scrollX.interpolate({
                     inputRange,
-                    outputRange: [6, 0, 6],
+                    outputRange: [4, 0, 4],
                     extrapolate: 'clamp',
                   });
 
@@ -379,6 +473,10 @@ export const WelcomePromoModal: React.FC = () => {
                       <Animated.View
                         style={[
                           styles.productCard,
+                          {
+                            width: cardWidth,
+                            height: cardHeight,
+                          },
                           isCurrent
                             ? styles.productCardActive
                             : styles.productCardInactive,
@@ -389,7 +487,6 @@ export const WelcomePromoModal: React.FC = () => {
                               { scale },
                               { rotate },
                             ],
-                            opacity,
                           },
                         ]}>
                         <View style={styles.cardHeader}>
@@ -404,24 +501,40 @@ export const WelcomePromoModal: React.FC = () => {
                         </View>
 
                         <View style={styles.cardDiscountBadge}>
-                          <JaggedBadge text={deal.discountBadge} size={46} />
+                          <JaggedBadge
+                            text={deal.discountBadge}
+                            size={isCompact ? 42 : 46}
+                          />
                         </View>
 
-                        <View style={styles.cardImgWrapper}>
+                        <View
+                          style={[
+                            styles.cardImgWrapper,
+                            { height: imageWrapperHeight },
+                          ]}
+                          accessibilityLabel={deal.name}>
                           <LinearGradient
                             colors={['#F5F3FF', '#EDE9FE']}
                             style={styles.cardImgGradient}>
                             <Image
                               source={deal.image}
                               style={styles.cardImg}
-                              contentFit="cover"
+                              contentFit="contain"
+                              transition={200}
+                              priority="high"
+                              cachePolicy="memory-disk"
+                              accessibilityLabel={deal.name}
                             />
                           </LinearGradient>
                         </View>
 
                         <View style={styles.cardFeatureRow}>
                           <View style={styles.featureIconCircle}>
-                            <Ionicons name="sparkles" size={10} color="#0D9488" />
+                            <Ionicons
+                              name="sparkles"
+                              size={10}
+                              color="#0D9488"
+                            />
                           </View>
                           <Text style={styles.featureText} numberOfLines={1}>
                             {deal.featureDesc}
@@ -430,7 +543,11 @@ export const WelcomePromoModal: React.FC = () => {
 
                         <View style={styles.cardPriceRow}>
                           <View style={styles.priceCol}>
-                            <Text style={styles.cardPriceMain}>
+                            <Text
+                              style={[
+                                styles.cardPriceMain,
+                                isCompact && styles.cardPriceMainCompact,
+                              ]}>
                               {deal.promoPriceFormatted}
                             </Text>
                             <Text style={styles.cardPriceOriginal}>
@@ -443,6 +560,22 @@ export const WelcomePromoModal: React.FC = () => {
                             </Text>
                           </View>
                         </View>
+
+                        {/* Backdrop overlay for left & right inactive cards instead of opacity reduction */}
+                        <Animated.View
+                          style={[
+                            styles.cardBackdropOverlay,
+                            { opacity: backdropOpacity },
+                          ]}
+                          pointerEvents="none">
+                          <LinearGradient
+                            colors={[
+                              'rgba(15, 8, 28, 0.44)',
+                              'rgba(30, 14, 52, 0.58)',
+                            ]}
+                            style={styles.cardBackdropGradient}
+                          />
+                        </Animated.View>
                       </Animated.View>
                     </TouchableOpacity>
                   );
@@ -496,7 +629,10 @@ export const WelcomePromoModal: React.FC = () => {
 
                 <View style={styles.boxBannerContainer}>
                   <LinearGradient
-                    colors={['rgba(255,255,255,0.26)', 'rgba(255,255,255,0.09)']}
+                    colors={[
+                      'rgba(255,255,255,0.26)',
+                      'rgba(255,255,255,0.09)',
+                    ]}
                     style={styles.boxBannerInner}>
                     <Text style={styles.bannerSubtitle}>Bundle Deals</Text>
                     <Text style={styles.bannerTitle}>PARTY READY SALE</Text>
@@ -507,11 +643,24 @@ export const WelcomePromoModal: React.FC = () => {
           </View>
 
           <TouchableOpacity
-            style={styles.shopNowBtn}
+            style={[
+              styles.shopNowBtn,
+              {
+                width: buttonWidth,
+                height: isCompact ? 46 : 52,
+                marginTop: isSmallHeight ? 8 : 12,
+              },
+            ]}
             onPress={handleShopNow}
             activeOpacity={0.88}>
             <View style={styles.shopNowInner}>
-              <Text style={styles.shopNowText}>Shop now</Text>
+              <Text
+                style={[
+                  styles.shopNowText,
+                  isCompact && { fontSize: 15.5 },
+                ]}>
+                Shop now
+              </Text>
               <View style={styles.shopNowBadge}>
                 <Text style={styles.shopNowBadgeText}>
                   {currentDeal.promoPriceFormatted}
@@ -519,14 +668,6 @@ export const WelcomePromoModal: React.FC = () => {
                 <Feather name="arrow-right" size={14} color="#052E16" />
               </View>
             </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.closeBtn}
-            onPress={handleClose}
-            activeOpacity={0.7}
-            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
-            <Feather name="x" size={20} color="#FFFFFF" />
           </TouchableOpacity>
         </Animated.View>
       </View>
@@ -547,7 +688,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(12, 8, 22, 0.66)',
+    backgroundColor: 'rgba(12, 8, 22, 0.76)',
   },
   modalContent: {
     width: '100%',
@@ -557,7 +698,6 @@ const styles = StyleSheet.create({
   },
   headlineContainer: {
     alignItems: 'center',
-    marginBottom: 6,
     paddingHorizontal: 16,
     width: '100%',
     position: 'relative',
@@ -572,6 +712,10 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 8,
   },
+  yellowHeadlineCompact: {
+    fontSize: 26,
+    letterSpacing: -0.4,
+  },
   whiteHeadline: {
     fontSize: 25,
     fontWeight: '800',
@@ -583,6 +727,11 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 6,
   },
+  whiteHeadlineCompact: {
+    fontSize: 20,
+    marginTop: 0,
+    letterSpacing: -0.2,
+  },
   showcaseWrapper: {
     position: 'relative',
     alignItems: 'center',
@@ -591,19 +740,16 @@ const styles = StyleSheet.create({
   },
   carouselWrapper: {
     width: '100%',
-    height: 244,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 10,
   },
   carouselScrollContent: {
     paddingVertical: 4,
-    gap: CARD_GAP,
+    gap: 10,
     alignItems: 'center',
   },
   productCard: {
-    width: CARD_WIDTH,
-    height: CARD_HEIGHT,
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
     paddingHorizontal: 12,
@@ -660,8 +806,7 @@ const styles = StyleSheet.create({
   },
   cardImgWrapper: {
     width: '100%',
-    height: 98,
-    borderRadius: 12,
+    borderRadius: 14,
     overflow: 'hidden',
     backgroundColor: '#FAF5FF',
     alignItems: 'center',
@@ -674,10 +819,13 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 14,
+    padding: 4,
   },
   cardImg: {
     width: '100%',
     height: '100%',
+    borderRadius: 10,
   },
   cardFeatureRow: {
     flexDirection: 'row',
@@ -720,6 +868,9 @@ const styles = StyleSheet.create({
     color: '#1A1428',
     letterSpacing: -0.3,
   },
+  cardPriceMainCompact: {
+    fontSize: 18,
+  },
   cardPriceOriginal: {
     fontSize: 13,
     fontWeight: '600',
@@ -739,6 +890,21 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#15803D',
     letterSpacing: 0.3,
+  },
+  cardBackdropOverlay: {
+    position: 'absolute',
+    top: -1.5,
+    left: -1.5,
+    right: -1.5,
+    bottom: -1.5,
+    borderRadius: 18,
+    overflow: 'hidden',
+    zIndex: 30,
+  },
+  cardBackdropGradient: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 18,
   },
   boxBase: {
     marginTop: 4,
@@ -832,12 +998,9 @@ const styles = StyleSheet.create({
   },
   shopNowBtn: {
     backgroundColor: '#4ADE80',
-    width: 285,
-    height: 52,
     borderRadius: 26,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 14,
     shadowColor: '#4ADE80',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.5,
@@ -871,16 +1034,19 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '900',
   },
-  closeBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.8)',
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+  closeBtnContainer: {
+    position: 'absolute',
+    zIndex: 99,
+  },
+  closeBtnTopRight: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.45)',
+    backgroundColor: 'rgba(0, 0, 0, 0.42)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 14,
   },
   sparkleContainer: {
     position: 'absolute',

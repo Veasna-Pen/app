@@ -34,7 +34,6 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: SkincareColors.background },
         }}>
         <Stack.Screen name="index" />
-        <Stack.Screen name="product/[id]" />
       </Stack>
       <CartModal />
       <ToastBanner />

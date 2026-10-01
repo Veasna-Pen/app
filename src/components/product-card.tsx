@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
 import { Product } from '@/data/products';
 import { SkincareColors } from '@/constants/skincare-theme';
 import { useStore } from '@/context/store-context';
@@ -16,10 +15,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const favorited = isWishlisted(product.id);
 
   const handlePress = () => {
-    router.push({
-      pathname: '/product/[id]',
-      params: { id: product.id },
-    });
+    Alert.alert('Not Available', 'Product details are not available.');
   };
 
   return (
