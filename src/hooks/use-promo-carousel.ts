@@ -3,6 +3,7 @@ import {
   Animated,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   ScrollView,
   useWindowDimensions,
 } from 'react-native';
@@ -17,6 +18,7 @@ interface CarouselLayout {
   snapInterval: number;
   horizontalInset: number;
   boxWidth: number;
+  boxCompact: boolean;
   buttonWidth: number;
   imageWrapperHeight: number;
 }
@@ -49,7 +51,11 @@ export function usePromoCarousel(isVisible: boolean): UsePromoCarouselReturn {
     const cardGap = 10;
     const snapInterval = cardWidth + cardGap;
     const horizontalInset = Math.max(0, (screenWidth - cardWidth) / 2);
-    const boxWidth = Math.min(screenWidth * 0.9, isCompact ? 306 : 332);
+    // Android phones are narrower in dp and draw text larger, so the gift box runs a size down there
+    const boxCompact = Platform.OS === 'android';
+    const boxWidth = boxCompact
+      ? Math.min(screenWidth * 0.84, isCompact ? 282 : 304)
+      : Math.min(screenWidth * 0.9, isCompact ? 306 : 332);
     const buttonWidth = Math.min(boxWidth, isCompact ? 276 : 295);
 
     return {
@@ -61,6 +67,7 @@ export function usePromoCarousel(isVisible: boolean): UsePromoCarouselReturn {
       snapInterval,
       horizontalInset,
       boxWidth,
+      boxCompact,
       buttonWidth,
       imageWrapperHeight,
     };

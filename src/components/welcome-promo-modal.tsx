@@ -46,6 +46,7 @@ export const WelcomePromoModal: React.FC = () => {
     snapInterval,
     horizontalInset,
     boxWidth,
+    boxCompact,
     buttonWidth,
     imageWrapperHeight,
   } = layout;
@@ -187,7 +188,11 @@ export const WelcomePromoModal: React.FC = () => {
               </Animated.ScrollView>
             </View>
 
-            <GiftBox width={boxWidth} sparkleAnim={sparkleAnim} />
+            <GiftBox
+              width={boxWidth}
+              compact={boxCompact}
+              sparkleAnim={sparkleAnim}
+            />
           </View>
 
           <TouchableOpacity
@@ -236,7 +241,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(12, 8, 22, 0.76)',
+    backgroundColor: 'rgba(4, 18, 28, 0.78)',
   },
   modalContent: {
     width: '100%',

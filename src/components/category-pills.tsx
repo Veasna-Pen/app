@@ -45,7 +45,7 @@ export const CategoryPills: React.FC<CategoryPillsProps> = ({
                   size={14}
                   color={
                     isSelected
-                      ? '#FFFFFF'
+                      ? SkincareColors.onPrimary
                       : SkincareColors.textSecondary
                   }
                 />
@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
     borderColor: SkincareColors.border,
   },
   pillActive: {
-    backgroundColor: SkincareColors.primaryDark,
-    borderColor: SkincareColors.primaryDark,
+    backgroundColor: SkincareColors.primary,
+    borderColor: SkincareColors.primary,
   },
   iconWrap: {
     marginRight: 6,
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     color: SkincareColors.textSecondary,
   },
   labelActive: {
-    color: '#FFFFFF',
+    color: SkincareColors.onPrimary,
     fontWeight: '600',
   },
 });

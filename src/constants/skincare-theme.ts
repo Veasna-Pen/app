@@ -1,29 +1,41 @@
 export const SkincareColors = {
-  background: '#FAF9FB',
+  // Brand blue: fills for primary actions and selected states
+  primary: '#00AEEF',
+  primaryPressed: '#0099D4',
+  // Dark enough for small blue text and icons on white (4.6:1)
+  primaryDeep: '#007DB0',
+  primarySoft: '#E3F5FD',
+  primaryBorder: '#BDE8FA',
+  // Text and icons on a primary fill; white on #00AEEF is only 2.5:1
+  onPrimary: '#06283D',
+
+  background: '#F6FAFC',
   white: '#FFFFFF',
   surface: '#FFFFFF',
-  surfaceSubtle: '#F4F2F7',
-  primaryDark: '#1A1428',
-  primaryDarkHover: '#28203D',
-  textPrimary: '#1A1428',
-  textSecondary: '#6F6B80',
-  textMuted: '#A09CAE',
-  border: '#EBE7F2',
-  borderLight: '#F3F0F8',
+  surfaceSubtle: '#EDF5F9',
+  // Navy ink for text and dark surfaces (toast, promo ticker)
+  primaryDark: '#0B2231',
+  primaryDarkHover: '#16374B',
+  textPrimary: '#0B2231',
+  textSecondary: '#5A6E7A',
+  textMuted: '#93A4AE',
+  border: '#DCE9F0',
+  borderLight: '#EAF2F6',
   saleRed: '#E54848',
   saleRedSubtle: '#FFF1F1',
   ratingGold: '#F5A623',
 
+  // Tints behind product photos; they follow the product, not the brand
   pastelLavender: '#EFEBF8',
   pastelMint: '#E9F3ED',
   pastelPeach: '#FAEDE4',
   pastelBlue: '#E8F0F8',
 
-  bannerStart: '#EFE7F8',
-  bannerEnd: '#E4DAF5',
+  bannerStart: '#E9F7FE',
+  bannerEnd: '#C6EBFB',
 
   avatarBorder: '#FFFFFF',
-  badgeDark: '#1A1428',
+  badgeDark: '#0B2231',
   badgeDarkText: '#FFFFFF',
 };
 
@@ -54,21 +66,21 @@ export const SkincareShadows = {
     elevation: 0,
   },
   subtle: {
-    shadowColor: '#1A1428',
+    shadowColor: '#0B2231',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.03,
     shadowRadius: 4,
     elevation: 1,
   },
   soft: {
-    shadowColor: '#1A1428',
+    shadowColor: '#0B2231',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
   },
   card: {
-    shadowColor: '#1A1428',
+    shadowColor: '#0B2231',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
     shadowRadius: 8,

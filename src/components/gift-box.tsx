@@ -6,15 +6,22 @@ import { SparkleStar } from '@/components/sparkle-star';
 interface GiftBoxProps {
   width: number;
   sparkleAnim: Animated.Value;
+  /** A size down: shorter face, smaller flaps and text. Used on Android. */
+  compact?: boolean;
 }
 
-export const GiftBox: React.FC<GiftBoxProps> = ({ width, sparkleAnim }) => {
+export const GiftBox: React.FC<GiftBoxProps> = ({
+  width,
+  sparkleAnim,
+  compact = false,
+}) => {
   return (
     <View style={[styles.boxBase, { width }]}>
-      <View style={styles.flapsContainer}>
-        <View style={styles.leftFlapContainer}>
+      <View
+        style={[styles.flapsContainer, compact && styles.flapsContainerCompact]}>
+        <View style={[styles.leftFlapContainer, compact && styles.flapCompact]}>
           <LinearGradient
-            colors={['#C084FC', '#9333EA', '#6B21A8']}
+            colors={['#6FD3F7', '#00AEEF', '#0079A8']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.flapGradient}
@@ -23,9 +30,9 @@ export const GiftBox: React.FC<GiftBoxProps> = ({ width, sparkleAnim }) => {
 
         <View style={styles.boxCavity} />
 
-        <View style={styles.rightFlapContainer}>
+        <View style={[styles.rightFlapContainer, compact && styles.flapCompact]}>
           <LinearGradient
-            colors={['#C084FC', '#9333EA', '#6B21A8']}
+            colors={['#6FD3F7', '#00AEEF', '#0079A8']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.flapGradient}
@@ -34,34 +41,39 @@ export const GiftBox: React.FC<GiftBoxProps> = ({ width, sparkleAnim }) => {
       </View>
 
       <LinearGradient
-        colors={['#8B5CF6', '#7C3AED', '#5B21B6']}
+        colors={['#0BA0DA', '#0079AA', '#00587C']}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
-        style={styles.boxFrontFace}>
+        style={[styles.boxFrontFace, compact && styles.boxFrontFaceCompact]}>
         <View style={styles.boxTopBevel} />
 
         <SparkleStar
-          size={16}
+          size={compact ? 14 : 16}
           color="#FFFFFF"
           animValue={sparkleAnim}
-          style={styles.sparkleBoxLeft}
+          style={[styles.sparkleBoxLeft, compact && styles.sparkleBoxLeftCompact]}
         />
         <SparkleStar
-          size={14}
+          size={compact ? 12 : 14}
           color="#FFE082"
           animValue={sparkleAnim}
-          style={styles.sparkleBoxRight}
+          style={[styles.sparkleBoxRight, compact && styles.sparkleBoxRightCompact]}
         />
 
         <View style={styles.boxBannerContainer}>
           <LinearGradient
             colors={[
-              'rgba(255,255,255,0.26)',
-              'rgba(255,255,255,0.09)',
+              'rgba(0, 45, 66, 0.34)',
+              'rgba(0, 45, 66, 0.2)',
             ]}
-            style={styles.boxBannerInner}>
-            <Text style={styles.bannerSubtitle}>Bundle Deals</Text>
-            <Text style={styles.bannerTitle}>PARTY READY SALE</Text>
+            style={[styles.boxBannerInner, compact && styles.boxBannerInnerCompact]}>
+            <Text
+              style={[styles.bannerSubtitle, compact && styles.bannerSubtitleCompact]}>
+              Bundle Deals
+            </Text>
+            <Text style={[styles.bannerTitle, compact && styles.bannerTitleCompact]}>
+              PARTY READY SALE
+            </Text>
           </LinearGradient>
         </View>
       </LinearGradient>
@@ -105,7 +117,7 @@ const styles = StyleSheet.create({
   boxCavity: {
     flex: 1,
     height: 8,
-    backgroundColor: 'rgba(40, 10, 70, 0.4)',
+    backgroundColor: 'rgba(0, 40, 60, 0.4)',
   },
   boxFrontFace: {
     width: '100%',
@@ -114,13 +126,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     position: 'relative',
-    shadowColor: '#4A0E78',
+    shadowColor: '#003C55',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.35,
     shadowRadius: 10,
     elevation: 8,
     borderWidth: 1,
-    borderColor: 'rgba(216, 180, 254, 0.4)',
+    borderColor: 'rgba(179, 230, 250, 0.45)',
   },
   boxTopBevel: {
     position: 'absolute',
@@ -151,12 +163,12 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   bannerTitle: {
-    color: '#4ADE80',
+    color: '#FFE600',
     fontSize: 15.5,
     fontWeight: '900',
     letterSpacing: 1.2,
     marginTop: 1,
-    textShadowColor: 'rgba(74, 222, 128, 0.4)',
+    textShadowColor: 'rgba(255, 230, 0, 0.35)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 6,
   },
@@ -171,5 +183,39 @@ const styles = StyleSheet.create({
     bottom: 10,
     right: 12,
     zIndex: 10,
+  },
+
+  // Compact size
+  flapsContainerCompact: {
+    height: 17,
+  },
+  flapCompact: {
+    width: 42,
+    height: 15,
+  },
+  boxFrontFaceCompact: {
+    height: 64,
+    borderRadius: 14,
+    paddingVertical: 7,
+  },
+  boxBannerInnerCompact: {
+    paddingVertical: 3,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+  },
+  bannerSubtitleCompact: {
+    fontSize: 9.5,
+  },
+  bannerTitleCompact: {
+    fontSize: 13.5,
+    letterSpacing: 1,
+  },
+  sparkleBoxLeftCompact: {
+    top: 8,
+    left: 10,
+  },
+  sparkleBoxRightCompact: {
+    bottom: 8,
+    right: 10,
   },
 });

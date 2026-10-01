@@ -194,7 +194,7 @@ export const CartModal: React.FC = () => {
                 }}
                 activeOpacity={0.88}>
                 <Text style={styles.checkoutBtnText}>Checkout (${cartTotal})</Text>
-                <Feather name="arrow-right" size={16} color="#FFFFFF" />
+                <Feather name="arrow-right" size={16} color={SkincareColors.onPrimary} />
               </TouchableOpacity>
             </View>
           )}
@@ -207,7 +207,7 @@ export const CartModal: React.FC = () => {
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(20, 15, 30, 0.35)',
+    backgroundColor: 'rgba(4, 18, 28, 0.4)',
     justifyContent: 'flex-end',
   },
   sheet: {
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderTopWidth: 1,
     borderTopColor: SkincareColors.borderLight,
-    shadowColor: '#1A1428',
+    shadowColor: SkincareColors.primaryDark,
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.03,
     shadowRadius: 10,
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#E4DFEC',
+    backgroundColor: SkincareColors.border,
   },
   header: {
     flexDirection: 'row',
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#FAF9FB',
+    backgroundColor: SkincareColors.background,
     borderWidth: 1,
     borderColor: SkincareColors.border,
     justifyContent: 'center',
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
   quantityControls: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FAF9FB',
+    backgroundColor: SkincareColors.background,
     borderRadius: 14,
     paddingHorizontal: 4,
     paddingVertical: 3,
@@ -359,13 +359,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: SkincareColors.primaryDark,
+    backgroundColor: SkincareColors.primary,
     borderRadius: 24,
     paddingVertical: 14,
     gap: 8,
   },
   checkoutBtnText: {
-    color: '#FFFFFF',
+    color: SkincareColors.onPrimary,
     fontSize: 15,
     fontWeight: '700',
   },
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#FAF9FB',
+    backgroundColor: SkincareColors.background,
     borderWidth: 1,
     borderColor: SkincareColors.border,
     justifyContent: 'center',

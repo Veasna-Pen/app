@@ -154,8 +154,8 @@ export const DealCard: React.FC<DealCardProps> = ({
           pointerEvents="none">
           <LinearGradient
             colors={[
-              'rgba(15, 8, 28, 0.44)',
-              'rgba(30, 14, 52, 0.58)',
+              'rgba(4, 18, 28, 0.44)',
+              'rgba(6, 32, 48, 0.58)',
             ]}
             style={styles.cardBackdropGradient}
           />
@@ -171,11 +171,11 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     position: 'relative',
     borderWidth: 1.5,
-    borderColor: '#EDE9FE',
+    borderColor: '#D9F1FC',
   },
   productCardActive: {
-    borderColor: '#C084FC',
-    shadowColor: '#3B0764',
+    borderColor: '#00AEEF',
+    shadowColor: '#003C55',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
     shadowRadius: 16,
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 16.5,
     borderTopRightRadius: 16.5,
     overflow: 'hidden',
-    backgroundColor: '#F5F3FF',
+    backgroundColor: '#EAF7FD',
   },
   cardImg: {
     width: '100%',
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   cardPriceMain: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#1A1428',
+    color: '#0B2231',
     letterSpacing: -0.3,
   },
   cardPriceMainCompact: {

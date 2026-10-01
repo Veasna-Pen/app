@@ -26,7 +26,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       activeOpacity={0.92}
       onPress={onPress}>
       <LinearGradient
-        colors={['#EDE5F8', '#DDD2F5']}
+        colors={[SkincareColors.bannerStart, SkincareColors.bannerEnd]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.bannerGradient}>
@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop: 6,
     borderWidth: 1,
-    borderColor: '#ECE4F4',
-    shadowColor: '#1A1428',
+    borderColor: SkincareColors.primaryBorder,
+    shadowColor: SkincareColors.primaryDark,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.03,
     shadowRadius: 6,

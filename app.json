@@ -20,7 +20,7 @@
       "predictiveBackGestureEnabled": false
     },
     "androidStatusBar": {
-      "backgroundColor": "#F6F4F9",
+      "backgroundColor": "#F6FAFC",
       "barStyle": "dark-content",
       "translucent": true
     },
@@ -33,7 +33,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#00AEEF",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }

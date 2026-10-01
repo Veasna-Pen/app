@@ -18,7 +18,7 @@ export const PromoTicker: React.FC<PromoTickerProps> = ({
       onPress={onPress}
       activeOpacity={0.88}>
       <LinearGradient
-        colors={['#1E1333', '#2F1E4F']}
+        colors={['#06202E', '#0B3A52']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={styles.welcomePromoGradient}>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop: 4,
     marginBottom: 8,
-    shadowColor: '#1A1428',
+    shadowColor: '#0B2231',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 6,
