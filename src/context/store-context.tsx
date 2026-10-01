@@ -1,15 +1,24 @@
 import React, { createContext, useContext, useState, useMemo, useCallback } from 'react';
-import { Product, PRODUCTS } from '@/data/products';
+import { Product, PRODUCTS, WELCOME_DEALS, WelcomeDeal } from '@/data/products';
 
 export interface CartItem {
   product: Product;
   quantity: number;
 }
 
+export interface PromoVoucher {
+  code: string;
+  percent: number;
+  label: string;
+}
+
 interface StoreContextType {
   cart: CartItem[];
   cartCount: number;
+  cartSubtotal: number;
+  discountAmount: number;
   cartTotal: number;
+  hasFreeShipping: boolean;
   addToCart: (product: Product, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, delta: number) => void;
@@ -21,17 +30,25 @@ interface StoreContextType {
   openCart: () => void;
   closeCart: () => void;
   toastMessage: string | null;
+  isWelcomePromoOpen: boolean;
+  openWelcomePromo: () => void;
+  closeWelcomePromo: () => void;
+  appliedVoucher: PromoVoucher | null;
+  applyWelcomeVoucher: () => void;
+  removeVoucher: () => void;
+  claimWelcomeDeal: (deal?: WelcomeDeal) => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([
-    // Pre-populate with Floral Skin Serum so user immediately sees active cart badge if desired
-    { product: PRODUCTS[0], quantity: 1 },
+    { product: PRODUCTS[1] ?? PRODUCTS[0], quantity: 1 },
   ]);
   const [wishlist, setWishlist] = useState<string[]>([PRODUCTS[0].id]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isWelcomePromoOpen, setIsWelcomePromoOpen] = useState(false);
+  const [appliedVoucher, setAppliedVoucher] = useState<PromoVoucher | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const showToast = useCallback((msg: string) => {
@@ -104,15 +121,85 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     [wishlist]
   );
 
+  const openWelcomePromo = useCallback(() => setIsWelcomePromoOpen(true), []);
+  const closeWelcomePromo = useCallback(() => setIsWelcomePromoOpen(false), []);
+
+  const applyWelcomeVoucher = useCallback(() => {
+    setAppliedVoucher({
+      code: 'EXTRA20',
+      percent: 20,
+      label: 'Extra 20% OFF',
+    });
+    showToast('🎉 Extra 20% OFF voucher applied!');
+  }, [showToast]);
+
+  const removeVoucher = useCallback(() => {
+    setAppliedVoucher(null);
+    showToast('Voucher removed');
+  }, [showToast]);
+
+  const claimWelcomeDeal = useCallback(
+    (deal?: WelcomeDeal) => {
+      const selected = deal ?? WELCOME_DEALS[1];
+      const targetProduct =
+        PRODUCTS.find((p) => p.id === selected.productId) ?? PRODUCTS[0];
+
+      setAppliedVoucher({
+        code: 'EXTRA20',
+        percent: 20,
+        label: 'Extra 20% OFF',
+      });
+
+      setCart((prev) => {
+        const exists = prev.some((item) => item.product.id === targetProduct.id);
+        if (exists) return prev;
+        return [
+          ...prev,
+          {
+            product: {
+              ...targetProduct,
+              price: selected.promoPrice,
+              priceFormatted: selected.promoPriceFormatted,
+            },
+            quantity: 1,
+          },
+        ];
+      });
+
+      setIsWelcomePromoOpen(false);
+      showToast(`🎉 Extra 20% OFF + ${selected.name} added!`);
+    },
+    [showToast]
+  );
+
   const cartCount = useMemo(
     () => cart.reduce((total, item) => total + item.quantity, 0),
     [cart]
   );
 
-  const cartTotal = useMemo(
-    () => cart.reduce((total, item) => total + item.product.price * item.quantity, 0),
+  const cartSubtotal = useMemo(
+    () =>
+      Number(
+        cart
+          .reduce((total, item) => total + item.product.price * item.quantity, 0)
+          .toFixed(2)
+      ),
     [cart]
   );
+
+  const discountAmount = useMemo(() => {
+    if (!appliedVoucher) return 0;
+    return Number(((cartSubtotal * appliedVoucher.percent) / 100).toFixed(2));
+  }, [appliedVoucher, cartSubtotal]);
+
+  const cartTotal = useMemo(
+    () => Number(Math.max(0, cartSubtotal - discountAmount).toFixed(2)),
+    [cartSubtotal, discountAmount]
+  );
+
+  const hasFreeShipping = useMemo(() => {
+    return appliedVoucher !== null || cartSubtotal > 0;
+  }, [appliedVoucher, cartSubtotal]);
 
   const openCart = useCallback(() => setIsCartOpen(true), []);
   const closeCart = useCallback(() => setIsCartOpen(false), []);
@@ -122,7 +209,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       value={{
         cart,
         cartCount,
+        cartSubtotal,
+        discountAmount,
         cartTotal,
+        hasFreeShipping,
         addToCart,
         removeFromCart,
         updateQuantity,
@@ -134,6 +224,13 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         openCart,
         closeCart,
         toastMessage,
+        isWelcomePromoOpen,
+        openWelcomePromo,
+        closeWelcomePromo,
+        appliedVoucher,
+        applyWelcomeVoucher,
+        removeVoucher,
+        claimWelcomeDeal,
       }}>
       {children}
     </StoreContext.Provider>

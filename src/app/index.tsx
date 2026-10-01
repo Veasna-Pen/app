@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -20,9 +20,16 @@ import { ProductCard } from '@/components/product-card';
 import { CategoryPills } from '@/components/category-pills';
 
 export default function HomeScreen() {
-  const { cartCount, wishlist, openCart } = useStore();
+  const { cartCount, wishlist, openCart, openWelcomePromo, appliedVoucher } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      openWelcomePromo();
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [openWelcomePromo]);
 
   const filteredProducts = useMemo(() => {
     return PRODUCTS.filter((item) => {
@@ -114,12 +121,40 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* Scrollable Content */}
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}>
-          {/* Hero Promotional Banner */}
+
+          {/* Claim */}
+          <TouchableOpacity
+            style={styles.welcomePromoTicker}
+            onPress={openWelcomePromo}
+            activeOpacity={0.88}>
+            <LinearGradient
+              colors={['#1E1333', '#2F1E4F']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.welcomePromoGradient}>
+              <View style={styles.welcomeTickerLeft}>
+                <View style={styles.partyTag}>
+                  <Text style={styles.partyTagText}>BUNDLE DEALS</Text>
+                </View>
+                <Text style={styles.welcomeTickerText} numberOfLines={1}>
+                  {appliedVoucher
+                    ? '🎉 Extra 20% OFF Active + Free Shipping'
+                    : 'Extra 20% off · Free shipping · US $1.79 Deal'}
+                </Text>
+              </View>
+              <View style={styles.welcomeTickerBtn}>
+                <Text style={styles.welcomeTickerBtnText}>
+                  {appliedVoucher ? 'View' : 'Claim'}
+                </Text>
+                <Feather name="chevron-right" size={13} color="#000000" />
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.bannerContainer}
             activeOpacity={0.92}
@@ -134,7 +169,6 @@ export default function HomeScreen() {
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.bannerGradient}>
-              {/* Left Column: Text & Offer */}
               <View style={styles.bannerTextCol}>
                 <View style={styles.saleBadge}>
                   <Text style={styles.saleTagText}>40% OFF · LIMITED EDIT</Text>
@@ -148,7 +182,6 @@ export default function HomeScreen() {
                 </View>
               </View>
 
-              {/* Right Column: Visual Skincare Bottle */}
               <View style={styles.bannerImageCol}>
                 <Image
                   source={featuredSerum.image}
@@ -159,13 +192,11 @@ export default function HomeScreen() {
             </LinearGradient>
           </TouchableOpacity>
 
-          {/* Category Selector */}
           <CategoryPills
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}
           />
 
-          {/* Featured Products Section */}
           <View style={styles.featuredSection}>
             <View style={styles.featuredHeaderRow}>
               <Text style={styles.featuredHeader}>Featured Products</Text>
@@ -387,5 +418,65 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: SkincareColors.primaryDark,
+  },
+  welcomePromoTicker: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginTop: 4,
+    marginBottom: 8,
+    shadowColor: '#1A1428',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  welcomePromoGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 16,
+  },
+  welcomeTickerLeft: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginRight: 8,
+  },
+  partyTag: {
+    backgroundColor: 'rgba(255, 230, 0, 0.2)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#FFE600',
+  },
+  partyTagText: {
+    color: '#FFE600',
+    fontSize: 9,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  welcomeTickerText: {
+    flex: 1,
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  welcomeTickerBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#4ADE80',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    gap: 2,
+  },
+  welcomeTickerBtnText: {
+    color: '#000000',
+    fontSize: 11,
+    fontWeight: '800',
   },
 });

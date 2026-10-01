@@ -19,7 +19,12 @@ export const CartModal: React.FC = () => {
     isCartOpen,
     closeCart,
     cart,
+    cartSubtotal,
+    discountAmount,
     cartTotal,
+    hasFreeShipping,
+    appliedVoucher,
+    removeVoucher,
     updateQuantity,
     clearCart,
   } = useStore();
@@ -35,12 +40,10 @@ export const CartModal: React.FC = () => {
         <Pressable
           style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 20) }]}
           onPress={(e) => e.stopPropagation()}>
-          {/* Sheet Grabber */}
           <View style={styles.handleContainer}>
             <View style={styles.sheetHandle} />
           </View>
 
-          {/* Header */}
           <View style={styles.header}>
             <View>
               <Text style={styles.title}>Shopping Bag</Text>
@@ -124,8 +127,66 @@ export const CartModal: React.FC = () => {
             <View style={styles.footer}>
               <View style={styles.totalRow}>
                 <Text style={styles.totalLabel}>Subtotal</Text>
-                <Text style={styles.totalValue}>${cartTotal}</Text>
+                <Text style={styles.totalValue}>${cartSubtotal}</Text>
               </View>
+
+              {appliedVoucher && (
+                <>
+                  <View style={styles.discountRow}>
+                    <View style={styles.discountTagRow}>
+                      <Text style={styles.discountTagText}>
+                        {appliedVoucher.label} ({appliedVoucher.code})
+                      </Text>
+                      <TouchableOpacity
+                        onPress={removeVoucher}
+                        hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}>
+                        <Feather name="x" size={13} color="#E54848" />
+                      </TouchableOpacity>
+                    </View>
+                    <Text style={styles.discountValueText}>-${discountAmount}</Text>
+                  </View>
+
+                  <View style={styles.shippingRow}>
+                    <Text style={styles.shippingLabel}>Shipping</Text>
+                    <View style={styles.freeBadge}>
+                      <Text style={styles.freeBadgeText}>
+                        {hasFreeShipping ? 'FREE' : '$5.00'}
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              )}
+
+              <View
+                style={[
+                  styles.totalRow,
+                  appliedVoucher
+                    ? {
+                        marginTop: 6,
+                        paddingTop: 8,
+                        borderTopWidth: 1,
+                        borderTopColor: SkincareColors.borderLight,
+                      }
+                    : null,
+                ]}>
+                <Text
+                  style={[
+                    styles.totalLabel,
+                    appliedVoucher
+                      ? { fontWeight: '700', color: SkincareColors.primaryDark }
+                      : null,
+                  ]}>
+                  Total
+                </Text>
+                <Text
+                  style={[
+                    styles.totalValue,
+                    appliedVoucher ? { fontSize: 18, fontWeight: '800' } : null,
+                  ]}>
+                  ${cartTotal}
+                </Text>
+              </View>
+
               <TouchableOpacity
                 style={styles.checkoutBtn}
                 onPress={() => {
@@ -337,5 +398,53 @@ const styles = StyleSheet.create({
     color: SkincareColors.textSecondary,
     textAlign: 'center',
     lineHeight: 18,
+  },
+  discountRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 4,
+  },
+  discountTagRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E8FDF0',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#C3F6D4',
+    gap: 6,
+  },
+  discountTagText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#16A34A',
+  },
+  discountValueText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#16A34A',
+  },
+  shippingRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 3,
+  },
+  shippingLabel: {
+    fontSize: 13,
+    color: SkincareColors.textSecondary,
+  },
+  freeBadge: {
+    backgroundColor: '#E8FDF0',
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  freeBadgeText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#16A34A',
   },
 });

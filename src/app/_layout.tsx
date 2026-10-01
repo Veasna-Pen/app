@@ -8,15 +8,15 @@ import { StatusBar as RNStatusBar, Platform } from 'react-native';
 import { StoreProvider } from '@/context/store-context';
 import { CartModal } from '@/components/cart-modal';
 import { ToastBanner } from '@/components/toast-banner';
+import { WelcomePromoModal } from '@/components/welcome-promo-modal';
 import { SkincareColors } from '@/constants/skincare-theme';
 
-// Keep splash screen visible until assets are ready
-SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.preventAutoHideAsync().catch(() => { });
 
 export default function RootLayout() {
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => {});
-    SystemUI.setBackgroundColorAsync(SkincareColors.background).catch(() => {});
+    SplashScreen.hideAsync().catch(() => { });
+    SystemUI.setBackgroundColorAsync(SkincareColors.background).catch(() => { });
     if (Platform.OS === 'android') {
       RNStatusBar.setTranslucent(true);
       RNStatusBar.setBackgroundColor('transparent');
@@ -26,15 +26,7 @@ export default function RootLayout() {
 
   return (
     <StoreProvider>
-      {Platform.OS === 'android' ? (
-        <RNStatusBar
-          barStyle="dark-content"
-          backgroundColor="transparent"
-          translucent
-        />
-      ) : (
-        <StatusBar style="dark" />
-      )}
+      <StatusBar style="dark" />
       <Stack
         screenOptions={{
           headerShown: false,
@@ -46,6 +38,7 @@ export default function RootLayout() {
       </Stack>
       <CartModal />
       <ToastBanner />
+      <WelcomePromoModal />
     </StoreProvider>
   );
 }

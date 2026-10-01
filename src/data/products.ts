@@ -30,6 +30,80 @@ export const CATEGORIES: Category[] = [
   { id: 'cleanser', name: 'Cleanser', iconName: 'wind' },
 ];
 
+export interface WelcomeDeal {
+  id: string;
+  name: string;
+  subtitle: string;
+  tagline: string;
+  featureDesc: string;
+  discountBadge: string;
+  promoPrice: number;
+  promoPriceFormatted: string;
+  originalPrice: number;
+  originalPriceFormatted: string;
+  image: ImageSourcePropType;
+  productId: string;
+}
+
+export const WELCOME_DEALS: WelcomeDeal[] = [
+  {
+    id: 'deal-cream',
+    name: 'Floral Hydrating Cream',
+    subtitle: 'ROSE CERAMIDES · 24H MOISTURE',
+    tagline: 'INTENSE HYDRATION',
+    featureDesc: 'Deep moisture lock with rose ceramides',
+    discountBadge: '-66%',
+    promoPrice: 33,
+    promoPriceFormatted: '$33.00',
+    originalPrice: 98,
+    originalPriceFormatted: '$98.00',
+    image: require('@/assets/products/floral-serum.jpg'),
+    productId: 'floral-hydrating-cream',
+  },
+  {
+    id: 'deal-serum',
+    name: 'Floral Skin Serum Deluxe',
+    subtitle: '100% ORGANIC BOTANICAL ACTIVE',
+    tagline: 'ORGANIC RADIANCE',
+    featureDesc: 'Innovative active botanical complex deeply restores moisture barrier',
+    discountBadge: '-77%',
+    promoPrice: 34,
+    promoPriceFormatted: '$34.00',
+    originalPrice: 147,
+    originalPriceFormatted: '$147.00',
+    image: require('@/assets/products/floral-serum.jpg'),
+    productId: 'floral-skin-serum',
+  },
+  {
+    id: 'deal-sensitive',
+    name: 'Sensitive Skin Serum',
+    subtitle: 'CALMING CHAMOMILE & LIPIDS',
+    tagline: 'BARRIER REPAIR',
+    featureDesc: 'Soothes redness and strengthens skin resilience',
+    discountBadge: '-60%',
+    promoPrice: 50,
+    promoPriceFormatted: '$50.00',
+    originalPrice: 125,
+    originalPriceFormatted: '$125.00',
+    image: require('@/assets/products/sensitive-serum.jpg'),
+    productId: 'sensitive-skin-serum',
+  },
+  {
+    id: 'deal-oily',
+    name: 'Oily Skin Balancing Serum',
+    subtitle: 'PEACH BLOSSOM & ZINC PCA',
+    tagline: 'SEBUM CONTROL',
+    featureDesc: 'Balances sebum and tightens pores with silky matte finish',
+    discountBadge: '-55%',
+    promoPrice: 38,
+    promoPriceFormatted: '$38.00',
+    originalPrice: 132,
+    originalPriceFormatted: '$132.00',
+    image: require('@/assets/products/oily-serum.jpg'),
+    productId: 'oily-skin-serum',
+  },
+];
+
 export const PRODUCTS: Product[] = [
   {
     id: 'floral-skin-serum',
