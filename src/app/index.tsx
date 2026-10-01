@@ -1,98 +1,391 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image } from 'expo-image';
+import { Feather, Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+import { PRODUCTS } from '@/data/products';
+import { SkincareColors } from '@/constants/skincare-theme';
+import { useStore } from '@/context/store-context';
+import { ProductCard } from '@/components/product-card';
+import { CategoryPills } from '@/components/category-pills';
 
 export default function HomeScreen() {
+  const { cartCount, wishlist, openCart } = useStore();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
+  const filteredProducts = useMemo(() => {
+    return PRODUCTS.filter((item) => {
+      const matchesCategory =
+        selectedCategory.toLowerCase() === 'all' ||
+        item.category.toLowerCase() === selectedCategory.toLowerCase();
+      const matchesSearch =
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.subtitle.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [selectedCategory, searchQuery]);
+
+  const featuredSerum = PRODUCTS[0];
+
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+      <View style={styles.container}>
+        {/* Top Header Bar */}
+        <View style={styles.header}>
+          <View style={styles.searchBar}>
+            <Feather
+              name="search"
+              size={18}
+              color={SkincareColors.textMuted}
+              style={styles.searchIcon}
+            />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search skincare products..."
+              placeholderTextColor={SkincareColors.textMuted}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              returnKeyType="search"
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity
+                onPress={() => setSearchQuery('')}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                <Feather name="x" size={16} color={SkincareColors.textMuted} />
+              </TouchableOpacity>
+            )}
+          </View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+          {/* Top Actions: Wishlist & Bag */}
+          <View style={styles.headerActions}>
+            <TouchableOpacity
+              style={styles.actionBtn}
+              onPress={() => {
+                // If wishlist has items, quick-filter or alert
+                if (wishlist.length > 0) {
+                  const firstWish = PRODUCTS.find((p) => wishlist.includes(p.id));
+                  if (firstWish) {
+                    router.push({
+                      pathname: '/product/[id]',
+                      params: { id: firstWish.id },
+                    });
+                  }
+                }
+              }}
+              activeOpacity={0.75}>
+              <Ionicons
+                name={wishlist.length > 0 ? 'heart' : 'heart-outline'}
+                size={20}
+                color={wishlist.length > 0 ? '#E14D4D' : SkincareColors.primaryDark}
+              />
+              {wishlist.length > 0 && (
+                <View style={styles.actionBadge}>
+                  <Text style={styles.actionBadgeText}>{wishlist.length}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
+            <TouchableOpacity
+              style={styles.actionBtn}
+              onPress={openCart}
+              activeOpacity={0.75}>
+              <Feather
+                name="shopping-bag"
+                size={19}
+                color={SkincareColors.primaryDark}
+              />
+              {cartCount > 0 && (
+                <View style={styles.actionBadge}>
+                  <Text style={styles.actionBadgeText}>{cartCount}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Scrollable Content */}
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}>
+          {/* Hero Promotional Banner */}
+          <TouchableOpacity
+            style={styles.bannerContainer}
+            activeOpacity={0.92}
+            onPress={() =>
+              router.push({
+                pathname: '/product/[id]',
+                params: { id: featuredSerum.id },
+              })
+            }>
+            <LinearGradient
+              colors={['#EDE5F8', '#DDD2F5']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.bannerGradient}>
+              {/* Left Column: Text & Offer */}
+              <View style={styles.bannerTextCol}>
+                <View style={styles.saleBadge}>
+                  <Text style={styles.saleTagText}>40% OFF · LIMITED EDIT</Text>
+                </View>
+                <Text style={styles.bannerTitle}>
+                  Floral Organic{'\n'}Skin Care
+                </Text>
+                <View style={styles.bannerActionRow}>
+                  <Text style={styles.bannerActionText}>Shop featured</Text>
+                  <Feather name="arrow-right" size={13} color={SkincareColors.primaryDark} />
+                </View>
+              </View>
+
+              {/* Right Column: Visual Skincare Bottle */}
+              <View style={styles.bannerImageCol}>
+                <Image
+                  source={featuredSerum.image}
+                  style={styles.bannerBottle}
+                  contentFit="cover"
+                />
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          {/* Category Selector */}
+          <CategoryPills
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
           />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+          {/* Featured Products Section */}
+          <View style={styles.featuredSection}>
+            <View style={styles.featuredHeaderRow}>
+              <Text style={styles.featuredHeader}>Featured Products</Text>
+              <Text style={styles.featuredCount}>
+                {filteredProducts.length} {filteredProducts.length === 1 ? 'item' : 'items'}
+              </Text>
+            </View>
+            {filteredProducts.length === 0 ? (
+              <View style={styles.emptySearch}>
+                <Feather name="search" size={28} color={SkincareColors.textMuted} style={{ marginBottom: 8 }} />
+                <Text style={styles.emptyText}>No products found</Text>
+                <TouchableOpacity
+                  style={styles.clearFilterBtn}
+                  onPress={() => {
+                    setSearchQuery('');
+                    setSelectedCategory('all');
+                  }}>
+                  <Text style={styles.resetFilterText}>Clear filters</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            )}
+          </View>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    backgroundColor: SkincareColors.background,
   },
-  heroSection: {
+  container: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 10,
+    gap: 10,
+  },
+  searchBar: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    height: 44,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderColor: SkincareColors.border,
+    shadowColor: '#1A1428',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.02,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 13,
+    color: SkincareColors.primaryDark,
+    paddingVertical: 0,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  actionBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: SkincareColors.border,
+    position: 'relative',
+  },
+  actionBadge: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    backgroundColor: SkincareColors.primaryDark,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 3,
+  },
+  actionBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: '700',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 32,
+  },
+  bannerContainer: {
+    borderRadius: 22,
+    overflow: 'hidden',
+    marginTop: 6,
+    borderWidth: 1,
+    borderColor: '#ECE4F4',
+    shadowColor: '#1A1428',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    elevation: 1,
+  },
+  bannerGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 18,
+    borderRadius: 22,
+    minHeight: 164,
+  },
+  bannerTextCol: {
+    flex: 1.25,
+    justifyContent: 'center',
+  },
+  saleBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    marginBottom: 8,
+  },
+  saleTagText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: SkincareColors.primaryDark,
+    letterSpacing: 0.5,
+  },
+  bannerTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: SkincareColors.primaryDark,
+    lineHeight: 26,
+    letterSpacing: -0.3,
+  },
+  bannerActionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 10,
+  },
+  bannerActionText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: SkincareColors.primaryDark,
+  },
+  bannerImageCol: {
+    flex: 0.85,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
   },
-  title: {
-    textAlign: 'center',
+  bannerBottle: {
+    width: 110,
+    height: 130,
+    borderRadius: 16,
   },
-  code: {
-    textTransform: 'uppercase',
+  featuredSection: {
+    marginTop: 4,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  featuredHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  featuredHeader: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: SkincareColors.primaryDark,
+    letterSpacing: -0.2,
+  },
+  featuredCount: {
+    fontSize: 12,
+    color: SkincareColors.textMuted,
+    fontWeight: '500',
+  },
+  emptySearch: {
+    alignItems: 'center',
+    paddingVertical: 36,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: SkincareColors.textSecondary,
+    marginBottom: 10,
+  },
+  clearFilterBtn: {
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: SkincareColors.border,
+  },
+  resetFilterText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: SkincareColors.primaryDark,
   },
 });
