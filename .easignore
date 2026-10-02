@@ -1,0 +1,23 @@
+# The EAS archive root is this repository root, not mobile/, because the Expo
+# project sits in a subdirectory of the git repo. Only mobile/ is ever built.
+
+.git/
+
+.expo/
+dist/
+build/
+out/
+.next/
+web-build/
+android/
+ios/
+
+*.tsbuildinfo
+*.log
+.DS_Store
+
+.env
+.env.local
+.env.production
+!.env.example
+app-demo/
